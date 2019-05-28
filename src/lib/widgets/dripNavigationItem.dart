@@ -4,8 +4,11 @@ class DripNavigationItem extends ListTile {
   final String label;
   final String route;
 
-  DripNavigationItem({Key key, this.label, this.route})
-    : super(key: key);
+  const DripNavigationItem({
+    Key key,
+    this.label,
+    this.route
+  }) : super(key: key);
   
   @override
   Widget build(BuildContext context) {

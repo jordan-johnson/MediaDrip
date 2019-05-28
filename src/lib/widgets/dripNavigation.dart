@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'dripNavigationList.dart';
+import 'dripNavigationItem.dart';
+
+export 'dripNavigationItem.dart';
 
 class DripNavigation extends Drawer {
+  final List<DripNavigationItem> items;
+
+  const DripNavigation({
+    Key key,
+    this.items
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return DripNavigationList(
-      items: <DripNavigationItem>[
-        DripNavigationItem(label: 'Home', route: 'home'),
-        DripNavigationItem(label: 'Download', route: 'download'),
-        DripNavigationItem(label: 'Video Tools', route: 'tools'),
-        DripNavigationItem(label: 'Settings', route: 'settings')
-      ]
+    return Drawer(
+      child: ListView(children: items)
     );
   }
 }

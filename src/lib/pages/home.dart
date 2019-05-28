@@ -26,8 +26,13 @@ class HomePageState extends State<HomePage> {
           )
         ]
       ),
-      drawer: Drawer(
-        child: DripNavigation()
+      drawer: DripNavigation(
+        items: <DripNavigationItem>[
+          DripNavigationItem(label: 'Home', route: 'home'),
+          DripNavigationItem(label: 'Download', route: 'download'),
+          DripNavigationItem(label: 'Video Tools', route: 'tools'),
+          DripNavigationItem(label: 'Settings', route: 'settings')
+        ]
       )
     );
   }
