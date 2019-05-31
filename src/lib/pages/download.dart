@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../widgets/page/dripPage.dart';
 import 'pageWrapper.dart';
 
-class HomePage extends DripPage {
+class DownloadPage extends DripPage {
   @override
-  String get route => '/';
+  String get route => '/download';
 
   @override
   Widget get body =>
     PageWrapper(
-      Text('k')
+      Text('this is the download page')
     );
 }

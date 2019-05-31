@@ -1,9 +1,9 @@
 # Custom
-src/.metadata
-src/android/
-src/build/
-src/ios/
-src/test/
+.metadata
+android/
+build/
+ios/
+test/
 
 # Miscellaneous
 *.class
