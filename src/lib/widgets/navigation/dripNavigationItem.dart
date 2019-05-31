@@ -18,8 +18,7 @@ class DripNavigationItem extends ListTile {
       title: Text(this.label),
       leading: Icon(this.icon, color: Colors.black),
       onTap: () {
-        Navigator.of(context).pop();
-        Navigator.pushNamed(context, '/' + this.route);
+        Navigator.pushNamed(context, this.route);
       }
     );
   }

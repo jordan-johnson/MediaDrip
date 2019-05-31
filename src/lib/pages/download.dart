@@ -7,8 +7,12 @@ class DownloadPage extends DripPage {
   String get route => '/download';
 
   @override
-  Widget get body =>
-    PageWrapper(
-      Text('this is the download page')
+  Widget build(BuildContext context) {
+    return PageWrapper(
+      Text(
+        'this is the download page!',
+        style: Theme.of(context).textTheme.display1
+      )
     );
+  }
 }

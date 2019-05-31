@@ -7,8 +7,12 @@ class HomePage extends DripPage {
   String get route => '/';
 
   @override
-  Widget get body =>
-    PageWrapper(
-      Text('k')
+  Widget build(BuildContext context) {
+    return PageWrapper(
+      Text(
+        'home page!',
+        style: Theme.of(context).textTheme.display1
+      )
     );
+  }
 }
