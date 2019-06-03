@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class DripNavigationItem extends ListTile {
+class DripDrawerItem extends ListTile {
   final String label;
   final String route;
   final IconData icon;
 
-  const DripNavigationItem({
+  const DripDrawerItem({
     Key key,
     this.label,
     this.route,

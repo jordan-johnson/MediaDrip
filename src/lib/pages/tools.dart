@@ -1,15 +1,15 @@
 import '../widgets/page/dripPage.dart';
 import 'util/pageWrapper.dart';
 
-class DownloadPage extends DripPage {
+class ToolsPage extends DripPage {
   @override
-  String get route => '/download';
+  String get route => '/tools';
 
   @override
   Widget build(BuildContext context) {
     return PageWrapper(
       body: Text(
-        'this is the download page!',
+        'video tools!!!',
         style: Theme.of(context).textTheme.display1
       )
     );

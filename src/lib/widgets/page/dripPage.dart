@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
+export 'package:flutter/material.dart';
 
-abstract class DripPage extends StatefulWidget {
+abstract class DripPage extends StatelessWidget {
   final String route;
   final List<DripPage> children;
+  final Object routeArguments;
 
   DripPage({
     Key key,
     this.route,
-    this.children
-  }) : super(key: key);
+    this.children,
+    this.routeArguments
+  });
 
   @protected
   Widget build(BuildContext context);
-
-  @override
-  DripState createState() => DripState();
-}
-
-class DripState extends State<DripPage> {
-  @override
-  Widget build(BuildContext context) => widget.build(context);
 }

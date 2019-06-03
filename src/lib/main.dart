@@ -16,6 +16,7 @@ class MediaDrip extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
+      home: _router.getRoot(),
       onGenerateRoute: _router.getRoutes(),
     );
   }

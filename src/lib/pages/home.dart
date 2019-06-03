@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import '../widgets/page/dripPage.dart';
-import 'pageWrapper.dart';
+import 'util/pageWrapper.dart';
 
 class HomePage extends DripPage {
   @override
@@ -9,8 +8,9 @@ class HomePage extends DripPage {
   @override
   Widget build(BuildContext context) {
     return PageWrapper(
-      Text(
-        'home page!',
+      enableDrawer: true,
+      body: Text(
+        'this is the home page!',
         style: Theme.of(context).textTheme.display1
       )
     );

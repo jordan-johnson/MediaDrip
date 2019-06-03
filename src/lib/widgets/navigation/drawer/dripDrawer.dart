@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'dripNavigationItem.dart';
+import 'dripDrawerItem.dart';
 
-export 'dripNavigationItem.dart';
+export 'package:flutter/material.dart'; 
+export 'dripDrawerItem.dart';
 
-class DripNavigation extends Drawer {
-  final List<DripNavigationItem> items;
+class DripDrawer extends Drawer {
+  final List<DripDrawerItem> items;
 
-  const DripNavigation({
+  const DripDrawer({
     Key key,
     this.items
   }) : super(key: key);
