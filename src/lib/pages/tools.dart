@@ -3,11 +3,15 @@ import 'util/pageWrapper.dart';
 
 class ToolsPage extends DripPage {
   @override
+  String get title => 'Tools';
+
+  @override
   String get route => '/tools';
 
   @override
   Widget build(BuildContext context) {
     return PageWrapper(
+      title: this.title,
       body: Text(
         'video tools!!!',
         style: Theme.of(context).textTheme.display1

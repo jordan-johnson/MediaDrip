@@ -15,7 +15,7 @@ class DripDrawer extends Drawer {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(children: items)
+      child: ListView(children: items, )
     );
   }
 }

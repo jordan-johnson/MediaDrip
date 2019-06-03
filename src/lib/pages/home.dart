@@ -3,16 +3,16 @@ import 'util/pageWrapper.dart';
 
 class HomePage extends DripPage {
   @override
+  String get title => '';
+
+  @override
   String get route => '/';
 
   @override
   Widget build(BuildContext context) {
     return PageWrapper(
       enableDrawer: true,
-      body: Text(
-        'this is the home page!',
-        style: Theme.of(context).textTheme.display1
-      )
+      body: DripAssets.image('mediaDripLogo.png', 512, 128)
     );
   }
 }
