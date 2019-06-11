@@ -1,12 +1,16 @@
 import '../widgets/page/dripPage.dart';
 import 'util/pageWrapper.dart';
+import '../tools/downloader.dart';
 
-class DownloadPage extends DripPage {
+class DownloadPage extends StatefulDripPage {
   @override
   String get title => 'Download';
 
   @override
   String get route => '/download';
+
+  final downloadTool = Downloader();
+  //final urlController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +22,11 @@ class DownloadPage extends DripPage {
           TextField(
             decoration: InputDecoration(
               hintText: 'Please enter a URL...'
-            ),
+            )
           ),
           RaisedButton(
             child: Text('Download'),
-            onPressed: () => null
+            onPressed: () => downloadTool.run()
           )
         ]
       )

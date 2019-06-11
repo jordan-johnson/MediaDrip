@@ -1,7 +1,7 @@
 import '../widgets/page/dripPage.dart';
 import 'util/pageWrapper.dart';
 
-class HomePage extends DripPage {
+class HomePage extends StatelessDripPage {
   @override
   String get title => '';
 

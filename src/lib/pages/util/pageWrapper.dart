@@ -15,8 +15,9 @@ class PageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // If page title is null, default to MediaDrip
       appBar: AppBar(
-        title: Text('MediaDrip'),
+        title: (this.title != null) ? Text(this.title) : Text('MediaDrip'),
         automaticallyImplyLeading: true
       ),
       body: Padding(
@@ -24,24 +25,8 @@ class PageWrapper extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /// Render optional title
-            (this.title != null) ? Column(
-              children: <Widget>[
-                Text(
-                  this.title,
-                  style: Theme.of(context).textTheme.display1
-                ),
-                Divider(color: Colors.deepPurple)
-              ],
-            ) : null,
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: this.body
-            )
-          /// REQUIRED
-          /// If the title isn't found and this line isn't present,
-          /// then exceptions will be thrown
-          ]..removeWhere((widget) => widget == null),
+            this.body
+          ]
         )
       ),
       drawer: (this.enableDrawer) ? PageDrawer() : null

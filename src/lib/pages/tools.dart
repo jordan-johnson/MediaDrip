@@ -1,9 +1,9 @@
 import '../widgets/page/dripPage.dart';
 import 'util/pageWrapper.dart';
 
-class ToolsPage extends DripPage {
+class ToolsPage extends StatefulDripPage {
   @override
-  String get title => 'Tools';
+  String get title => 'Video Tools';
 
   @override
   String get route => '/tools';
