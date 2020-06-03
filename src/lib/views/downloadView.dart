@@ -18,8 +18,6 @@ class DownloadView extends View {
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<DownloadModel>(context);
-
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
@@ -40,10 +38,14 @@ class DownloadView extends View {
                 hintText: 'Please enter a URL...'
               )
             ),
-            RaisedButton(
-              child: Text('Download'),
-              onPressed: () {
-                model.download([_inputController.text]);
+            Consumer<DownloadModel>(
+              builder: (context, model, child) {
+                final buttonLabel = model.isDownloading ? 'Wait...' : 'Download';
+
+                return RaisedButton(
+                  child: Text(buttonLabel),
+                  onPressed: (model.isDownloading) ? null : () => model.download([_inputController.text])
+                );
               }
             ),
             Consumer<DownloadModel>(

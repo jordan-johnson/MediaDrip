@@ -11,9 +11,9 @@ class MediaDrip extends StatelessWidget {
   final ViewManager _viewManager;
   final DripRouter _router;
 
-  MediaDrip()
-    : _viewManager = ViewManager(),
-      _router = DripRouter()
+  MediaDrip() :
+    _viewManager = ViewManager(),
+    _router = DripRouter()
   {
     _router.registerRoutes(_viewManager.getViews());
   }
