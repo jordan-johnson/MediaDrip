@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
-import 'pages/pages.dart';
-import 'widgets/navigation/dripRouting.dart';
+import 'package:mediadrip/common/dripRouter.dart';
+import 'package:mediadrip/models/downloadModel.dart';
+import 'package:mediadrip/views/viewManager.dart';
+import 'package:provider/provider.dart';
+import 'common/theme.dart';
 
 class MediaDrip extends StatelessWidget {
   final String title = 'MediaDrip';
 
-  /// DripRouting relies on a Page Manager that contains
-  /// a list of pages and their routes.
-  final DripRouting _router = DripRouting(Pages());
+  final ViewManager _viewManager;
+  final DripRouter _router;
+
+  MediaDrip()
+    : _viewManager = ViewManager(),
+      _router = DripRouter()
+  {
+    _router.registerRoutes(_viewManager.getViews());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: this.title,
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => DownloadModel()
+        )
+      ],
+      child: MaterialApp(
+        title: this.title,
+        theme: AppTheme.getThemeData(),
+        debugShowCheckedModeBanner: false,
+        home: _viewManager.getView('MediaDrip'),
+        onGenerateRoute: _router.getRoutes()
       ),
-      home: _router.getRoot(),
-      onGenerateRoute: _router.getRoutes(),
     );
   }
 }

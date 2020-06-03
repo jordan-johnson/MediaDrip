@@ -1,6 +1,7 @@
 # Custom
 .metadata
 android/
+windows/
 build/
 ios/
 test/
