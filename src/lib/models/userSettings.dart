@@ -1,0 +1,4 @@
+class UserSettings {
+  String mediaDirectory = '';
+  
+}

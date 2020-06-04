@@ -18,6 +18,7 @@ class DripDrawer extends Drawer {
       child: ListView(
         children: [
           DripDrawerItem(label: 'Home', route: '/', icon: Icons.home),
+          DripDrawerItem(label: 'Browse', route: '/browse', icon: Icons.folder),
           DripDrawerItem(label: 'Download', route: '/download', icon: Icons.arrow_downward),
           DripDrawerItem(label: 'Video Tools', route: '/tools', icon: Icons.video_library),
           DripDrawerItem(label: 'Settings', route: '/settings', icon: Icons.settings)

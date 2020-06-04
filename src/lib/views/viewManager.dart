@@ -1,6 +1,7 @@
-import 'package:mediadrip/views/view.dart';
-import 'downloadView.dart';
+import 'view.dart';
 import 'homeView.dart';
+import 'downloadView.dart';
+import 'settingsView.dart';
 
 class ViewManager {
   List<View> _views = List();
@@ -9,6 +10,7 @@ class ViewManager {
     addViews([
       HomeView(),
       DownloadView(),
+      SettingsView()
     ]);
   }
 
