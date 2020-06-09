@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/theme.dart';
 import 'package:mediadrip/common/widgets/drip_header.dart';
 import 'package:mediadrip/views/view.dart';
 

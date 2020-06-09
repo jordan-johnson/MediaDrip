@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mediadrip/common/widgets/drawer/drip_drawer.dart';
-import 'package:mediadrip/common/theme.dart';
 import 'package:mediadrip/common/widgets/drip_app_bar.dart';
 import 'package:mediadrip/views/browse_view.dart';
 import 'package:mediadrip/views/download_view.dart';
