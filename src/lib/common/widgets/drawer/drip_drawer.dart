@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/drawer/drip_drawer_item.dart';
+import 'package:mediadrip/common/widgets/drawer/drip_drawer_item.dart';
 import 'package:mediadrip/views/view.dart';
 
 class DripDrawer extends Drawer {

@@ -13,6 +13,8 @@ class NavigationService {
     return navigatorKey.currentState.pushNamed(route);
   }
 
+  // if i ever make nested routes, this needs to be updated to get 
+  // the old ViewStateModel to check if it is now the root route
   bool back() {
     if(navigatorKey.currentState.canPop())
     {
