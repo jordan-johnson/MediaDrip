@@ -5,6 +5,7 @@ windows/
 build/
 ios/
 test/
+plugins/
 
 # Miscellaneous
 *.class

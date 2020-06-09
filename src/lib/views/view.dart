@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 abstract class View extends StatelessWidget {
-  String displayTitle();
-  String routeAddress();
+  String get label;
+  String get routeAddress;
+  IconData get icon;
+
+  Widget build(BuildContext context);
 }

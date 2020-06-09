@@ -1,33 +1,24 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/drawer/dripDrawer.dart';
 import 'package:mediadrip/common/theme.dart';
-import 'package:mediadrip/models/downloadModel.dart';
 import 'package:mediadrip/views/view.dart';
+import 'package:mediadrip/views/models/download_view_model.dart';
 import 'package:provider/provider.dart';
 
 class DownloadView extends View {
   @override
-  String displayTitle() => 'Download';
+  String get label => 'Download';
+  
+  @override
+  String get routeAddress => '/download';
 
   @override
-  String routeAddress() => '/download';
-
-  final TextEditingController _inputController = TextEditingController();
-  final TextEditingController _outputController = TextEditingController();
+  IconData get icon => Icons.arrow_downward;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text(displayTitle()),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Padding(
+    return ChangeNotifierProvider<DownloadViewModel>(
+      create: (_) => DownloadViewModel(),
+      child: Padding(
         padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: Container(
           child: Column(
@@ -40,31 +31,15 @@ class DownloadView extends View {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: Text(
-                        'Download Media',
-                        style: AppTheme.headerTextStyle
-                      ),
-                    ),
-                    Text(
-                      'Downloading without issue requires both ffmpeg and youtube-dl to be installed and added to your system variables.',
-                      style: AppTheme.subHeaderTextStyle
-                    ),
-                    Consumer<DownloadModel>(
-                      builder: (context, model, child) {
+                    AppTheme.header(Icons.cloud_download, 'Download Media', 'Downloading without issue requires both ffmpeg and youtube-dl to be installed and added to your system variables'),
+                    Consumer<DownloadViewModel>(
+                      builder: (_, model, __) {
                         return TextFormField(
-                          controller: _inputController,
+                          controller: model.inputController,
                           decoration: InputDecoration(
                             hintText: 'Please enter a URL...'
                           ),
-                          onFieldSubmitted: (fieldValue) {
-                            if(!model.isDownloading) {
-                              model.download([fieldValue]);
-                            }
-
-                            _inputController.text = '';
-                          }
+                          onFieldSubmitted: (value) => model.download(value)
                         );
                       }
                     ),
@@ -73,7 +48,7 @@ class DownloadView extends View {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Consumer<DownloadModel>(
+                          Consumer<DownloadViewModel>(
                             builder: (context, model, child) {
                               return RaisedButton(
                                 child: Text('Update youtube-dl'),
@@ -82,13 +57,11 @@ class DownloadView extends View {
                             }
                           ),
                           SizedBox(width: 20),
-                          Consumer<DownloadModel>(
+                          Consumer<DownloadViewModel>(
                             builder: (context, model, child) {
-                              final buttonLabel = model.isDownloading ? 'Wait...' : 'Download';
-
                               return RaisedButton(
-                                child: Text(buttonLabel),
-                                onPressed: (model.isDownloading) ? null : () => model.download([_inputController.text])
+                                child: Text(model.downloadButtonLabel),
+                                onPressed: model.isDownloadServiceRunning ? null : () => model.download()
                               );
                             }
                           ),
@@ -100,13 +73,13 @@ class DownloadView extends View {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Consumer<DownloadModel>(
+                child: Consumer<DownloadViewModel>(
                   builder: (context, model, child) {
-                    _outputController.text = model.getOutput;
+                    // _outputController.text = model.getOutput;
                     // _outputController.selection = TextSelection.fromPosition(TextPosition(offset: _outputController.text.length));
 
                     return TextField(
-                      controller: _outputController,
+                      controller: model.outputController,
                       maxLines: 8,
                       enabled: false,
                       decoration: InputDecoration(
@@ -120,9 +93,8 @@ class DownloadView extends View {
               )
             ],
           ),
-        )
-      ),
-      drawer: DripDrawer()
+        ),
+      )
     );
   }
 }

@@ -14,13 +14,26 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.5.2 <3.0.0"
+  #sdk: ">=2.1.0 <3.0.0"
+  flutter: ">=1.10.2-pre.54"
 
 dependencies:
   flutter:
     sdk: flutter
   youtube_extractor: ^1.0.2
   provider: ^4.1.2
+  file_chooser:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: ./plugins/file_chooser
+      ref: 1c641a9
+  path_provider: ^1.5.1
+  path_provider_fde:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: ./plugins/flutter_plugins/path_provider_fde
+      ref: 79d73d3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,7 +56,15 @@ flutter:
   uses-material-design: true
 
   assets:
-    - lib/assets/
+    - lib/assets/images/
+  
+  fonts:
+    - family: CormorantGaramond
+      fonts:
+        - asset: lib/assets/fonts/CormorantGaramond-Bold.ttf
+        - asset: lib/assets/fonts/CormorantGaramond-BoldItalic.ttf
+        - asset: lib/assets/fonts/CormorantGaramond-Medium.ttf
+        - asset: lib/assets/fonts/CormorantGaramond-MediumItalic.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
