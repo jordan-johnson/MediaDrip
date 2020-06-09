@@ -41,9 +41,12 @@ class ViewManager {
     if(view != null) {
       // wraps our view for a consistent theme
       return Scaffold(
-        backgroundColor: AppTheme.backgroundColor,
+        backgroundColor: Colors.white,
         appBar: DripAppBar(),
-        body: view.build(context),
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: view.build(context),
+        ),
         drawer: DripDrawer(items: _views),
       );
     }

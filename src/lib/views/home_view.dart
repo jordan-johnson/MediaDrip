@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mediadrip/common/theme.dart';
+import 'package:mediadrip/common/widgets/drip_header.dart';
 import 'package:mediadrip/views/view.dart';
 
 class HomeView extends View {
@@ -22,7 +23,11 @@ class HomeView extends View {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppTheme.header(Icons.home, '$label vAlpha', 'MediaDrip currently works by running processes that you have installed on your device. For example, in order to download media, you need to have youtube-dl added to your system variables.')
+              DripHeader(
+                icon: icon,
+                header: '$label',
+                subHeader: 'MediaDrip currently works by running processes that you have installed on your device. For example, in order to download media, you need to have youtube-dl added to your system variables.'
+              )
             ],
           ),
           Align(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/common/theme.dart';
+import 'package:mediadrip/common/widgets/drip_header.dart';
 import 'package:mediadrip/views/view.dart';
 import 'package:mediadrip/views/models/download_view_model.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class DownloadView extends View {
     return ChangeNotifierProvider<DownloadViewModel>(
       create: (_) => DownloadViewModel(),
       child: Padding(
-        padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,7 +32,11 @@ class DownloadView extends View {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppTheme.header(Icons.cloud_download, 'Download Media', 'Downloading without issue requires both ffmpeg and youtube-dl to be installed and added to your system variables'),
+                    DripHeader(
+                      icon: icon,
+                      header: 'Let\'s start dripping.',
+                      subHeader: 'Downloading without issue requires both ffmpeg and youtube-dl to be installed and added to your system variables.'
+                    ),
                     Consumer<DownloadViewModel>(
                       builder: (_, model, __) {
                         return TextFormField(
@@ -50,9 +55,11 @@ class DownloadView extends View {
                         children: [
                           Consumer<DownloadViewModel>(
                             builder: (context, model, child) {
-                              return RaisedButton(
-                                child: Text('Update youtube-dl'),
-                                onPressed: () => model.update()
+                              return IconButton(
+                                icon: Icon(Icons.autorenew),
+                                iconSize: 24,
+                                color: Theme.of(context).primaryColor,
+                                onPressed: () => model.update(),
                               );
                             }
                           ),
@@ -61,7 +68,7 @@ class DownloadView extends View {
                             builder: (context, model, child) {
                               return RaisedButton(
                                 child: Text(model.downloadButtonLabel),
-                                onPressed: model.isDownloadServiceRunning ? null : () => model.download()
+                                onPressed: model.isDownloadServiceRunning ? null : () => model.download(),
                               );
                             }
                           ),

@@ -65,6 +65,9 @@ flutter:
         - asset: lib/assets/fonts/CormorantGaramond-BoldItalic.ttf
         - asset: lib/assets/fonts/CormorantGaramond-Medium.ttf
         - asset: lib/assets/fonts/CormorantGaramond-MediumItalic.ttf
+    - family: WireOne
+      fonts:
+        - asset: lib/assets/fonts/WireOne-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
