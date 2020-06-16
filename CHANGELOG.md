@@ -1,5 +1,37 @@
 # MediaDrip Changelog
 
+## 1.0.1 (June 16, 2020)
+
+### New features
+
+* Settings implemented
+
+* Storage directory (located in My Documents)
+
+    * Currently stores application settings.
+
+    * Will eventually store youtube-dl configuration and downloads.
+
+### Fixes
+
+* Refactored a ton... basically a rewrite
+
+    * Wrote documentation for services
+
+### To do
+
+* Disable download and update buttons while youtube-dl service is running
+
+* Improve visuals
+
+* Test mobile devices
+
+* RSS feed on home view
+
+* Update settings view
+
+    * Create, modify, and save a configuration file for youtube-dl
+
 ## 1.0 (June 09, 2020)
 
 ### New features

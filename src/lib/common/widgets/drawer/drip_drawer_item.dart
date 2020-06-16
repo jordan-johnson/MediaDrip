@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/services/navigation_service.dart';
-import 'package:mediadrip/views/models/view_state_model.dart';
+import 'package:mediadrip/common/models/view_state_model.dart';
+import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/services/view_manager_service.dart';
 import 'package:provider/provider.dart';
 
 class DripDrawerItem extends ListTile {
@@ -12,20 +13,19 @@ class DripDrawerItem extends ListTile {
     Key key,
     this.label,
     this.route,
-    this.icon
+    this.icon,
   }) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
+    var viewService = locator<ViewManagerService>();
+
     return Consumer<ViewStateModel>(
       builder: (_, model, __) {
         return ListTile(
           title: Text(this.label),
           leading: Icon(this.icon, color: Colors.black),
-          onTap: () {
-            var navigator = Provider.of<NavigationService>(context, listen: false);
-            navigator.goTo(label, route);
-          }
+          onTap: () => viewService.goTo(route)
         );
       }
     );

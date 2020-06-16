@@ -22,6 +22,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^4.1.2
+  get_it: ^4.0.2
   file_chooser:
     git:
       url: git://github.com/google/flutter-desktop-embedding.git
@@ -56,6 +57,7 @@ flutter:
 
   assets:
     - lib/assets/images/
+    - lib/assets/settings.json
   
   fonts:
     - family: CormorantGaramond

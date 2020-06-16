@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/services/navigation_service.dart';
-import 'package:mediadrip/views/models/view_state_model.dart';
+import 'package:mediadrip/common/models/view_state_model.dart';
+import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/services/view_manager_service.dart';
 import 'package:provider/provider.dart';
 
 class DripAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final ViewManagerService _viewService = locator<ViewManagerService>();
+
   @override
   final Size preferredSize;
 
@@ -12,17 +15,15 @@ class DripAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    var navigator = Provider.of<NavigationService>(context, listen: false);
     return Consumer<ViewStateModel>(
       builder: (_, viewStateModel, __) {
-        bool isRootRoute = viewStateModel.currentView == 'MediaDrip';
-
+        var isRoot = viewStateModel.view.routeAddress == '/';
         return AppBar(
-          title: Text(viewStateModel.currentView),
-          automaticallyImplyLeading: isRootRoute,
-          leading: !isRootRoute ? IconButton(
+          title: Text(viewStateModel.view.label),
+          automaticallyImplyLeading: isRoot,
+          leading: !isRoot ? IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => navigator.back()
+            onPressed: () => _viewService.goBack()
           ) : null,
           // automaticallyImplyLeading: model.isRoot,
           // leading: model.leading(context)

@@ -30,7 +30,6 @@ class BrowseView extends View {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            // child: DripAssets.image('mediaDripLogo.png', 384, 128)
           )
         ],
       )

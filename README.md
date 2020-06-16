@@ -9,11 +9,10 @@ MediaDrip allows you to download, convert, merge, and trim videos and other medi
 * Manipulate media via ffmpeg
 * Browse and play media
 
-## Recent Updates (1.0 release)
+## Recent Updates (1.0.1 release)
 
-- [x] Tested and working on Windows 10
-- [x] Can update youtube-dl
-- [x] Can download media via youtube-dl
+- [x] Settings implemented
+- [x] Storage directory (placed in device's documents)
 
 *View more details on [CHANGELOG.md](CHANGELOG.md).*
 
@@ -28,6 +27,8 @@ MediaDrip allows you to download, convert, merge, and trim videos and other medi
 ### Included in build
 
 * provider 4.1.2
+
+* get it 4.0.2
 
 * file chooser (currently unused)
 
