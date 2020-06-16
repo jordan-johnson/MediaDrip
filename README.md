@@ -32,7 +32,9 @@ MediaDrip allows you to download, convert, merge, and trim videos and other medi
 
 * file chooser (currently unused)
 
-* path provider (currently unused)
+* path provider 1.5.1
+
+    * path provider flutter-desktop-embedding commit 79d73d3
 
 ## Usage
 
