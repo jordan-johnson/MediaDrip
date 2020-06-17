@@ -20,17 +20,18 @@ class DripHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+            padding: EdgeInsets.all(20),
             child: Row(
               children: [
+                Icon(icon),
                 SizedBox(width: 10),
                 Text(header, style: AppTheme.headerTextStyle)
               ],
             )
           ),
-          (subHeader.isEmpty) ? null :
+          if(subHeader != null)
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 0, 20),
+              padding: EdgeInsets.fromLTRB(30, 0, 0, 20),
               child: Row(
                 children: [
                   Icon(

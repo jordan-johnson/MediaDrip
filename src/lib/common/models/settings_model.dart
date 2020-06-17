@@ -10,6 +10,15 @@ class SettingsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  int _feedMaxEntries = 30;
+  int get feedMaxEntries => _feedMaxEntries;
+
+  set feedMaxEntries(int value) {
+    _feedMaxEntries = value;
+
+    notifyListeners();
+  }
+
   String _applicationStorage = '';
   String get applicationStorage => _applicationStorage;
 
@@ -26,6 +35,7 @@ class SettingsModel extends ChangeNotifier {
 
   SettingsModel.fromJson(Map<String, dynamic> json) {
     _isDarkMode = json['dark_mode'];
+    _feedMaxEntries = json['feed_max_entries'];
     _applicationStorage = json['application_storage'];
     _youtubeConfiguration = json['youtube_conf'];
 
@@ -35,6 +45,7 @@ class SettingsModel extends ChangeNotifier {
   Map<String, dynamic> toJson() =>
   {
     'dark_mode': _isDarkMode,
+    'feed_max_entries': _feedMaxEntries,
     'application_storage': _applicationStorage,
     'youtube_conf': _youtubeConfiguration
   };

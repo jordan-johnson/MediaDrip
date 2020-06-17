@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final TextStyle headerTextStyle = TextStyle(
-    fontSize: 56,
+    fontSize: 36,
     fontFamily: 'WireOne',
   );
 

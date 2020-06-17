@@ -14,6 +14,9 @@ class BrowseView extends View {
 
   @override
   Widget build(BuildContext context) {
+    final test = ModalRoute.of(context).settings.arguments;
+    print('hey guys:$test');
+
     return Padding(
       padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
       child: Stack(

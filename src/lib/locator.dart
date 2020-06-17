@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/services/view_manager_service.dart';
@@ -16,5 +17,6 @@ final locator = GetIt.instance;
 void setupLocator() {
   locator.registerLazySingleton(() => PathService());
   locator.registerLazySingleton(() => SettingsService());
+  locator.registerLazySingleton(() => FeedService());
   locator.registerLazySingleton(() => ViewManagerService());
 }

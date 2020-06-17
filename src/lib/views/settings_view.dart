@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mediadrip/common/widgets/drip_list_Item_collection.dart';
 import 'package:mediadrip/views/models/settings_view_model.dart';
 import 'package:mediadrip/views/providers/view_model_provider.dart';
@@ -36,8 +37,54 @@ class SettingsView extends View {
                         alignLabelWithHint: true,
                       ),
                     ),
+                  ],
+                ),
+                DripListItemCollection(
+                  header: 'Youtube Downloader',
+                  icon: Icons.cloud_download,
+                  children: [
                     ListTile(
-                      title: Text('Youtube-DL configuration'),
+                      leading: Icon(
+                        Icons.update
+                      ),
+                      title: Text('Automatic updates'),
+                      trailing: Switch(
+                        value: true,
+                        onChanged: (_) => print(''),
+                        activeColor: Theme.of(context).primaryColor,
+                      ),
+                      onTap: () => model.toggleDarkMode(),
+                    ),
+                    ListTile(
+                      title: Text('Manage configuration'),
+                      leading: Icon(
+                        Icons.settings_applications
+                      ),
+                      trailing: Icon(
+                        Icons.keyboard_arrow_right
+                      ),
+                      onTap: () => print('Tile pressed'),
+                    ),
+                  ],
+                ),
+                DripListItemCollection(
+                  header: 'RSS Feed',
+                  icon: Icons.rss_feed,
+                  children: [
+                    TextField(
+                      controller: model.rssFeedMaxEntriesTextController..text = model.feedMaxEntries,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'Max Entries',
+                        prefixIcon: Icon(Icons.format_list_numbered),
+                        alignLabelWithHint: true,
+                      ),
+                    ),
+                    ListTile(
+                      title: Text('Manage feeds'),
                       leading: Icon(
                         Icons.edit
                       ),
@@ -66,6 +113,10 @@ class SettingsView extends View {
                     ),
                   ],
                 ),
+                RaisedButton(
+                  child: Text('Save'),
+                  onPressed: () => model.save(),
+                )
               ],
             )
           )
