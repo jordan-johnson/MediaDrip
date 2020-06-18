@@ -7,6 +7,8 @@ class FeedEntry {
   DateTime published;
   FeedMedia media;
 
+  /// A media entry which contains the [link], date the entry was [published],
+  /// and the [media] which is an [FeedMedia] object.
   FeedEntry({
     this.link,
     this.published,

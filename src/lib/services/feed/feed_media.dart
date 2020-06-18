@@ -7,6 +7,9 @@ class FeedMedia {
   final FeedThumbnail thumbnail;
   final String description;
 
+  /// Media that contains a [title], [thumbnail], and [description.]
+  /// 
+  /// The thumbnail is a [FeedThumbnail] object which contains [FeedThumbnail.url]
   FeedMedia({
     this.title,
     this.thumbnail,

@@ -15,8 +15,6 @@ class FeedModel {
     var document = XmlDocument.parse(xmlString);
     XmlElement feedElement;
 
-    print('called');
-
     try {
       feedElement = document.findElements('feed').first;
     } on StateError {

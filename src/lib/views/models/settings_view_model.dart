@@ -17,12 +17,12 @@ class SettingsViewModel extends ViewModel {
     save();
   }
 
-  void save() {
+  Future<void> save() async {
     settings.data.feedMaxEntries = int.parse(rssFeedMaxEntriesTextController.text);
 
     notifyListeners();
 
-    settings.save();
+    await settings.save();
   }
 
   @override

@@ -12,8 +12,9 @@ class AppTheme {
 
   static ThemeData getThemeData() {
     return ThemeData(
+      visualDensity: VisualDensity.comfortable,
       primarySwatch: Colors.purple,
-      accentColor: Colors.purpleAccent,
+      accentColor: Colors.purple[400],
       backgroundColor: Colors.white,
 
       buttonTheme: ButtonThemeData(
