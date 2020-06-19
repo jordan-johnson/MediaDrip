@@ -3,6 +3,7 @@ import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/services/view_manager_service.dart';
+import 'package:mediadrip/services/youtube_downloader_service.dart';
 
 /// Locates registered services using the Get_It package.
 /// 
@@ -17,6 +18,7 @@ final locator = GetIt.instance;
 void setupLocator() {
   locator.registerLazySingleton(() => PathService());
   locator.registerLazySingleton(() => SettingsService());
+  locator.registerLazySingleton(() => YoutubeDownloaderService());
   locator.registerLazySingleton(() => FeedService());
   locator.registerLazySingleton(() => ViewManagerService());
 }

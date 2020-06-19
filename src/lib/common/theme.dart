@@ -24,6 +24,15 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8.0),
           side: BorderSide(color: Colors.purple)
         ),
+      ),
+
+      textTheme: TextTheme(
+        headline5: TextStyle(
+          color: Colors.purple
+        ),
+        headline6: TextStyle(
+          height: 1.5,
+        )
       )
     );
   }

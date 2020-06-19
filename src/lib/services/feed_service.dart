@@ -86,14 +86,14 @@ class FeedService {
   Future<void> _sortEntries() async {
     for(var feed in _feeds) {
       _allEntries.addAll(feed.entries);
-
-      if(_allEntries.length > _settingsService.data.feedMaxEntries) {
-        _allEntries.removeRange(_settingsService.data.feedMaxEntries, _allEntries.length);
-      }
     }
 
     // compares published dates
     _allEntries.sort((a, b) => b.published.compareTo(a.published));
+
+    if(_allEntries.length > _settingsService.data.feedMaxEntries) {
+      _allEntries.removeRange(_settingsService.data.feedMaxEntries, _allEntries.length);
+    }
 
     for(var entry in _allEntries) {
       var published = DateTime(entry.published.year, entry.published.month, entry.published.day);

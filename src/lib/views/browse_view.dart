@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/common/widgets/drip_header.dart';
+import 'package:mediadrip/views/models/browse_view_model.dart';
+import 'package:mediadrip/views/providers/view_model_provider.dart';
 import 'package:mediadrip/views/view.dart';
 
 class BrowseView extends View {
@@ -14,28 +16,37 @@ class BrowseView extends View {
 
   @override
   Widget build(BuildContext context) {
-    final test = ModalRoute.of(context).settings.arguments;
-    print('hey guys:$test');
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-      child: Stack(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DripHeader(
-                icon: icon,
-                header: 'Browsing drips...',
-                subHeader: 'Currently unavailable until a crossplatform file picker is supported.'
-              )
-            ],
+    return ViewModelProvider<BrowseViewModel>(
+      model: BrowseViewModel(context: context, arguments: routeArguments),
+      builder: (model) {
+        return Scaffold(
+          body: Padding(
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: (model.isViewingMedia) ? ListView(
+              children: [
+                Container(
+                  height: 300,
+                  child: Image.network(model.mediaThumbnail),
+                ),
+                Text(
+                  model.mediaTitle,
+                  style: Theme.of(context).textTheme.headline5
+                ),
+                Text(model.mediaDate),
+                Divider(),
+                Text(
+                  model.mediaDescription,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ],
+            ) : Text('File picker not yet available.')
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-          )
-        ],
-      )
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => model.downloadMedia(),
+            child: Icon(Icons.save),
+          ),
+        );
+      },
     );
   }
 }

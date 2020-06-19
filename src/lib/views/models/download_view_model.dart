@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/youtube_downloader_service.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 
 class DownloadViewModel extends ViewModel {
-  final YoutubeDownloaderService _downloaderService = YoutubeDownloaderService();
+  final YoutubeDownloaderService _downloaderService = locator<YoutubeDownloaderService>();
 
   final TextEditingController inputController = TextEditingController();
   final TextEditingController outputController = TextEditingController();

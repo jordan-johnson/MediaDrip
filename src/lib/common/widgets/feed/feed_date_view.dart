@@ -25,9 +25,7 @@ class FeedDateView extends StatelessWidget {
           header: this.label,
           icon: Icons.calendar_today,
         ),
-        Divider(
-          
-        ),
+        Divider(),
         GridView.count(
           crossAxisCount: this.gridCount,
           physics: ScrollPhysics(),
@@ -36,7 +34,7 @@ class FeedDateView extends StatelessWidget {
             for(var entry in entries)
               GestureDetector(
                 onTap: () {
-                  _viewManagerService.goTo('/browse', arguments: entry.media.thumbnail.url);
+                  _viewManagerService.goTo('/browse', arguments: entry.modelToCollection());
                 },
                 child: Column(
                   children: [

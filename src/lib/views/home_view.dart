@@ -23,126 +23,36 @@ class HomeView extends View {
       builder: (model) {
         return Padding(
           padding: EdgeInsets.all(10),
-          child: (model.loading) ? 
-            Center(
-              child: CircularProgressIndicator(),
-            ) : ListView(
+          child: (model.loading) ? Center(
+            child: CircularProgressIndicator(),
+          ) : 
+          ListView(
             children: [
-              FeedDateView(
-                label: 'Today',
-                entries: model.today,
-              ),
-              FeedDateView(
-                label: 'Yesterday',
-                entries: model.yesterday
-              ),
-              FeedDateView(
-                label: 'This week',
-                entries: model.thisWeek,
-              ),
-              FeedDateView(
-                label: 'This month',
-                entries: model.thisMonth,
-              ),
-              FeedDateView(
-                label: 'Older',
-                entries: model.older,
-              )
-              // DripHeader(
-              //   header: 'Today',
-              //   icon: Icons.calendar_today,
-              // ),
-              // GridView.count(
-              //   crossAxisCount: model.gridCount,
-              //   // childAspectRatio: 3 / 2,
-              //   physics: ScrollPhysics(),
-              //   shrinkWrap: true,
-              //   children: [
-              //     for(var entry in model.today)
-              //       Column(
-              //         children: [
-              //           Image.network(entry.media.thumbnail.url),
-              //           Text('hello')
-              //         ],
-              //       )
-              //   ],
-              // ),
-              // DripHeader(
-              //   header: 'Yesterday',
-              //   icon: Icons.calendar_today,
-              // ),
-              // GridView.count(
-              //   crossAxisCount: model.gridCount,
-              //   // childAspectRatio: 3 / 2,
-              //   physics: ScrollPhysics(),
-              //   shrinkWrap: true,
-              //   children: [
-              //     for(var entry in model.yesterday)
-              //       Column(
-              //         children: [
-              //           Image.network(entry.media.thumbnail.url),
-              //           Text('hello')
-              //         ],
-              //       )
-              //   ],
-              // ),
-              // DripHeader(
-              //   header: 'This Week',
-              //   icon: Icons.calendar_today,
-              // ),
-              // GridView.count(
-              //   crossAxisCount: model.gridCount,
-              //   // childAspectRatio: 3 / 2,
-              //   physics: ScrollPhysics(),
-              //   shrinkWrap: true,
-              //   children: [
-              //     for(var entry in model.thisWeek)
-              //       Column(
-              //         children: [
-              //           Image.network(entry.media.thumbnail.url),
-              //           Text('hello')
-              //         ],
-              //       )
-              //   ],
-              // ),
-              // DripHeader(
-              //   header: 'This Month',
-              //   icon: Icons.calendar_today,
-              // ),
-              // GridView.count(
-              //   crossAxisCount: model.gridCount,
-              //   // childAspectRatio: 3 / 2,
-              //   physics: ScrollPhysics(),
-              //   shrinkWrap: true,
-              //   children: [
-              //     for(var entry in model.thisMonth)
-              //       Column(
-              //         children: [
-              //           Image.network(entry.media.thumbnail.url),
-              //           Text('hello')
-              //         ],
-              //       )
-              //   ],
-              // ),
-              // DripHeader(
-              //   header: 'Older',
-              //   icon: Icons.calendar_today,
-              // ),
-              // GridView.count(
-              //   crossAxisCount: model.gridCount,
-              //   // childAspectRatio: 3 / 2,
-              //   physics: ScrollPhysics(),
-              //   shrinkWrap: true,
-              //   children: [
-              //     for(var entry in model.older)
-              //       Column(
-              //         children: [
-              //           Image.network(entry.media.thumbnail.url),
-              //           Text('hello')
-              //         ],
-              //       )
-              //   ],
-              // ),
+              if(model.today.length > 0)
+                FeedDateView(
+                  label: 'Today',
+                  entries: model.today,
+                ),
+              if(model.yesterday.length > 0)
+                FeedDateView(
+                  label: 'Yesterday',
+                  entries: model.yesterday
+                ),
+              if(model.thisWeek.length > 0)
+                FeedDateView(
+                  label: 'This week',
+                  entries: model.thisWeek,
+                ),
+              if(model.thisMonth.length > 0)
+                FeedDateView(
+                  label: 'This month',
+                  entries: model.thisMonth,
+                ),
+              if(model.older.length > 0)
+                FeedDateView(
+                  label: 'Older',
+                  entries: model.older,
+                )
             ]
           ),
         );

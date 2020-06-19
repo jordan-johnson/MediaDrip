@@ -1,5 +1,23 @@
 # MediaDrip Changelog
 
+## 1.1.0 (not complete)
+
+### New features
+
+* Web feed
+
+    * Landing page/home view now shows a web feed (currently only supports Youtube... `https://www.youtube.com/feeds/videos.xml?channel_id=<INSERT_ID>`)
+
+    * `feed.txt` located in `My Documents/MediaDrip/config/` houses each web address per line.
+
+    * Each web feed is parsed, ordered by date, and is displayed to the user in a youtube-like fashion of today, yesterday, this week, this month, and older.
+
+    * A setting was implemented to house a maximum number of feed entries. The oldest entries are removed based on this setting. The default setting is 30.
+
+    * Clicking on an entry will take the user to the browse view which displays the entry's thumbnail, title, date, and description. A save button at the bottom right of the screen saves the media.
+
+* Settings layout updated
+
 ## 1.0.1 (June 16, 2020)
 
 ### New features

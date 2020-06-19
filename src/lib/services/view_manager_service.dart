@@ -50,6 +50,8 @@ class ViewManagerService extends StatelessWidget {
     return (settings) {
       for(var view in _views) {
         if(settings.name == view.routeAddress) {
+          view.routeArguments = settings.arguments;
+          
           return CupertinoPageRoute(builder: (context) => build(context));
         }
       }
