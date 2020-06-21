@@ -32,8 +32,9 @@ class BrowseView extends View {
                   model.currentDrip.title,
                   style: Theme.of(context).textTheme.headline5
                 ),
-                Text(model.currentDrip.dateTime.toString()),
+                Text(model.currentDrip.dateTimeFormatted),
                 Divider(),
+                Text(model.currentDrip.author),
                 Text(
                   model.currentDrip.description,
                   style: Theme.of(context).textTheme.headline6,

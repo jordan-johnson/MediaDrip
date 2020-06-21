@@ -28,10 +28,13 @@ class AppTheme {
 
       textTheme: TextTheme(
         headline5: TextStyle(
-          color: Colors.purple
+          color: Colors.purple,
+          fontSize: 18,
+          fontWeight: FontWeight.bold
         ),
         headline6: TextStyle(
           height: 1.5,
+          fontSize: 14,
         )
       )
     );

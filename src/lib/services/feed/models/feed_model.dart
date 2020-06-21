@@ -1,3 +1,4 @@
+import 'package:mediadrip/services/feed/models/feed_author.dart';
 import 'package:mediadrip/services/feed/models/feed_entry.dart';
 import 'package:mediadrip/services/feed/helper.dart';
 import 'package:xml/xml.dart';

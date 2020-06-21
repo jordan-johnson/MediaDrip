@@ -18,4 +18,10 @@ class DateTimeHelper {
 
     return dateTime.isBefore(before) && dateTime.isAfter(after);
   }
+
+  static DateTime unixToDateTime(double timestamp) {
+    var update = timestamp.round() * 1000;
+
+    return DateTime.fromMillisecondsSinceEpoch(update);
+  }
 }

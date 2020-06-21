@@ -27,25 +27,73 @@ class FeedDateView extends StatelessWidget {
           icon: Icons.calendar_today,
         ),
         Divider(),
-        GridView.count(
-          crossAxisCount: this.gridCount,
-          physics: ScrollPhysics(),
+        ListView.separated(
+          physics: ClampingScrollPhysics(),
           shrinkWrap: true,
-          children: [
-            for(var entry in entries)
-              GestureDetector(
-                onTap: () {
-                  _viewManagerService.goTo('/browse', arguments: entry);
-                },
+          separatorBuilder: (_, __) => Divider(),
+          itemCount: entries.length,
+          itemBuilder: (_, index) {
+            return ListTile(
+              leading: SizedBox(
+                width: 100,
+                height: 200,
+                child: Image(fit: BoxFit.cover, image: entries[index].image.image)
+              ),
+              title: Align(
+                alignment: Alignment.topLeft,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    entry.image,
-                    Text(entry.title)
-                  ],
-                )
-              )
-          ],
+                    Text(
+                      entries[index].title,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Text(
+                      '${entries[index].dateTimeFormatted} by ${entries[index].author}',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  ]
+                ),
+              ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.keyboard_arrow_right)]
+              ),
+              onTap: () => _viewManagerService.goTo('/browse', arguments: entries[index]),
+            );
+          },
         )
+        // GridView.count(
+        //   crossAxisCount: this.gridCount,
+        //   physics: ScrollPhysics(),
+        //   shrinkWrap: true,
+        //   children: [
+        //     for(var entry in entries)
+        //       GestureDetector(
+        //         onTap: () {
+        //           _viewManagerService.goTo('/browse', arguments: entry);
+        //         },
+        //         child: SizedBox(
+        //           width: 450,
+        //           height: 300,
+        //           child: FittedBox(fit: BoxFit.contain, child: entry.image)
+        //         )
+        //         // child: Container(
+        //         //   width: 450,
+        //         //   height: 300,
+        //         //   child: FittedBox(
+        //         //     fit: BoxFit.cover,
+        //         //     child: entry.image
+        //         //   ),
+        //         // )
+        //       )
+        //   ],
+        // )
       ],
     );
   }
