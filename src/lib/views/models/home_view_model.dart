@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/feed/feed_entry.dart';
+import 'package:mediadrip/services/feed/models/feed_entry.dart';
 import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 
@@ -12,11 +13,11 @@ class HomeViewModel extends ViewModel {
   bool _loading = false;
   bool get loading => _loading;
 
-  List<FeedEntry> get today => _feedService.today;
-  List<FeedEntry> get yesterday => _feedService.yesterday;
-  List<FeedEntry> get thisWeek => _feedService.thisWeek;
-  List<FeedEntry> get thisMonth => _feedService.thisMonth;
-  List<FeedEntry> get older => _feedService.older;
+  List<DripModel> get today => _feedService.today;
+  List<DripModel> get yesterday => _feedService.yesterday;
+  List<DripModel> get thisWeek => _feedService.thisWeek;
+  List<DripModel> get thisMonth => _feedService.thisMonth;
+  List<DripModel> get older => _feedService.older;
 
   HomeViewModel({@required BuildContext context}) : 
     _feedService = locator<FeedService>(),
@@ -26,7 +27,7 @@ class HomeViewModel extends ViewModel {
   Future<void> initialize() async {
     _setLoading(true);
 
-    await _feedService.loadFeedList();
+    await _feedService.load();
 
     _setLoading(false);
   }

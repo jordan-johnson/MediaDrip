@@ -5,7 +5,7 @@ abstract class View extends StatelessWidget {
   String get routeAddress;
   IconData get icon;
 
-  List<String> routeArguments = List();
+  Object routeArguments = List();
 
   Widget build(BuildContext context);
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/common/widgets/drip_header.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/feed/feed_entry.dart';
+import 'package:mediadrip/services/feed/models/feed_entry.dart';
 import 'package:mediadrip/services/view_manager_service.dart';
 
 class FeedDateView extends StatelessWidget {
   final String label;
   final int gridCount = 3;
-  final List<FeedEntry> entries;
+  final List<DripModel> entries;
 
   final ViewManagerService _viewManagerService = locator<ViewManagerService>();
 
@@ -34,12 +35,12 @@ class FeedDateView extends StatelessWidget {
             for(var entry in entries)
               GestureDetector(
                 onTap: () {
-                  _viewManagerService.goTo('/browse', arguments: entry.modelToCollection());
+                  _viewManagerService.goTo('/browse', arguments: entry);
                 },
                 child: Column(
                   children: [
-                    Image.network(entry.media.thumbnail.url),
-                    Text(entry.media.title)
+                    entry.image,
+                    Text(entry.title)
                   ],
                 )
               )

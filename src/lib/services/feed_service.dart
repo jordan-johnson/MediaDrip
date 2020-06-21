@@ -1,10 +1,10 @@
+import 'dart:core';
+import 'package:mediadrip/common/models/drip_model.dart';
+import 'package:mediadrip/common/models/feed_source_model.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/feed/feed_entry.dart';
-import 'package:mediadrip/services/feed/feed_model.dart';
+import 'package:mediadrip/services/download_service.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:mediadrip/services/settings_service.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 import 'package:mediadrip/utilities/date_time_helper.dart';
 
 class FeedService {
@@ -12,91 +12,157 @@ class FeedService {
   /// [_feedListFileName], located in configuration directory, [_configDirectory].
   final PathService _pathService = locator<PathService>();
 
-  /// Settings service used in various feed settings like max feed entries.
+  /// Settings service used in various settings like max feed entries.
   final SettingsService _settingsService = locator<SettingsService>();
 
-  /// File name for feed list.
+  /// Download service that will be used in retrieving the web feed file.
+  final DownloadService _downloadService = locator<DownloadService>();
+
+  /// File name for feed list saved in [_configDirectory].
   final String _feedListFileName = 'feed.txt';
 
   /// Configuration directory which is provided to [PathService] to save our 
   /// feed file.
   final AvailableDirectories _configDirectory = AvailableDirectories.configuration;
 
-  /// Client for retrieving feed from web.
-  final Client _client = http.Client();
+  /// List of [FeedSourceModel] for correctly parsing the web content 
+  /// via [FeedSourceModel.parse].
+  List<FeedSourceModel> _sources = List<FeedSourceModel>();
 
-  /// Each line in our feed file is stored here for later processing by the 
-  /// xml parser.
-  List<String> _addressesToRead;
+  /// Complete list of feeds that are mapped by name and web feed address.
+  Map<String, String> feeds = Map<String, String>();
 
-  /// Complete list of feeds that will be broken down into [FeedEntry]s that 
-  /// will be fed into [_allEntries] to be sorted by publishing date.
-  List<FeedModel> _feeds = List<FeedModel>();
-
-  /// All entries stripped from [_feeds] that are sorted by publishing date.
+  /// All entries stripped from [feeds] that are sorted by publishing date.
   /// 
   /// These entries will then be further sorted into [today], [yesterday], 
   /// [thisWeek], [thisMonth], and [older].
-  List<FeedEntry> _allEntries = List<FeedEntry>();
-  List<FeedEntry> today = List<FeedEntry>();
-  List<FeedEntry> yesterday = List<FeedEntry>();
-  List<FeedEntry> thisWeek = List<FeedEntry>();
-  List<FeedEntry> thisMonth = List<FeedEntry>();
-  List<FeedEntry> older = List<FeedEntry>();
+  List<DripModel> _entries = List<DripModel>();
+  List<DripModel> today = List<DripModel>();
+  List<DripModel> yesterday = List<DripModel>();
+  List<DripModel> thisWeek = List<DripModel>();
+  List<DripModel> thisMonth = List<DripModel>();
+  List<DripModel> older = List<DripModel>();
 
-  /// Requests the path service to check if the feed file exists, create one 
-  /// if it does not, and load the contents if it does. 
-  Future<void> loadFeedList() async {
+  /// Feed service is used in downloading web feeds and sorting them into 
+  /// dates i.e. [today], [yesterday], [thisWeek], etc.
+  /// 
+  /// Refer to [load] for more information.
+  FeedService();
+
+  /// Loads web feeds from feed file saved in configuration directory.
+  /// 
+  /// If the file does not exist, create an empty document for later use.
+  /// 
+  /// Otherwise, get the file, parse its content, store the name of the 
+  /// feed and address (separated by comma), order by date, remove excess 
+  /// entries, and sort the entries into [today], [yesterday], [thisWeek], 
+  /// [thisMonth], and [older].
+  /// 
+  /// An example of feeds within the feed file:
+  /// 
+  ///   ```text
+  ///   Some Youtube Feed,https://www.youtube.com/feeds/videos.xml?channel_id=<id>
+  ///   My News Feed,https://www.reddit.com/r/news.rss
+  ///   ```
+  /// 
+  /// This method can be used to refresh the feed.
+  Future<void> load() async {
     var fileExists = await _pathService.fileExistsInDirectory(_feedListFileName, _configDirectory);
 
-    if(fileExists) {
-      var file = await _pathService.getFileInDirectory(_feedListFileName, _configDirectory);
+    if(!fileExists)
+      return await _pathService.createFileInDirectory(_feedListFileName, '', _configDirectory);
 
-      _addressesToRead = await file.readAsLines();
+    var file = await _pathService.getFileInDirectory(_feedListFileName, _configDirectory);
+    var readLines = await file.readAsLines();
 
-      await _readAddresses();
-      await _sortEntries();
-    } else {
-      await _pathService.createFileInDirectory(_feedListFileName, '', _configDirectory);
+    // if the file exists but no feeds are entered, we're done
+    if(readLines.length == 0)
+      return;
+
+    _mapFeeds(readLines);
+
+    await _downloadFeeds();
+
+    _orderEntriesByDateDescending();
+    _removeEntriesExceedingMaxSetting();
+    _sortEntriesByDate();
+  }
+
+  /// Adds a source to the collection for later use in 
+  /// parsing web feeds.
+  void addSource<T extends FeedSourceModel>(T source) {
+    if(source.sourceAddress.isEmpty) {
+      throw Exception('Source address cannot be empty!');
+    }
+
+    _sources.add(source);
+  }
+
+  /// Map the feeds by name of the feed and its address.
+  /// 
+  /// The feed data will be separated by comma.
+  void _mapFeeds(List<String> feedData) {
+    // clear the map in case the feed is being refreshed...
+    feeds.clear();
+
+    for(var feed in feedData) {
+      var split = feed.split(',');
+
+      // make sure we have a name and address
+      // if not, skip this line
+      if(split.length < 2)
+        continue;
+
+      var feedName = split[0];
+      var feedAddress = split[1];
+
+      this.feeds[feedName] = feedAddress;
     }
   }
 
-  /// Reads the addresses in [_addressesToRead] which were stored in the 
-  /// [loadFeedList] method. The web client, [_client], gets the contents 
-  /// from the address, and parses the XML data via [FeedModel.parse].
-  /// 
-  /// If the xml data parsed the contents, add the [FeedModel] to [_feeds].
-  Future<void> _readAddresses() async {
-    for(var address in _addressesToRead) {
-      var response = await _client.get(address);
-      var parser = FeedModel.parse(response.body);
+  /// Downloads the content of the web feeds and parses 
+  /// the content by getting the correct source match.
+  Future<void> _downloadFeeds() async {
+    // clear the entries in case the feed is being refreshed...
+    _entries.clear();
 
-      if(parser != null)
-        _feeds.add(parser);
+    for(var feed in feeds.entries) {
+      var source = _getSourceByAddress(feed.value);
+
+      if(source != null) {
+        var content = await _downloadService.get(feed.value);
+        var drips = await source.parse(content);
+
+        if(drips != null) {
+          _entries.addAll(drips);
+        }
+      }
     }
   }
 
-  /// Retrieves all feeds in [_feeds], pushes all their entries into 
-  /// [_allEntries], removes any entries that exceed the max entries 
-  /// setting, then sorts the entries by publishing date, and further 
-  /// sorts them into [today], [yesterday], [thisWeek], [thisMonth], 
-  /// and [older].
+  /// Speaks for itself. This method orders the entries list 
+  /// from newest to oldest. This is done because the next 
+  /// method will remove excess entries.
   /// 
-  /// I need to refactor this to not handle multiple concerns.
-  Future<void> _sortEntries() async {
-    for(var feed in _feeds) {
-      _allEntries.addAll(feed.entries);
+  /// Refer to [_removeEntriesExceedingMaxSetting] for more 
+  /// information.
+  void _orderEntriesByDateDescending() {
+    _entries.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+  }
+
+  /// Simply removes excess entries dictated by the amount 
+  /// provided by the setting.
+  void _removeEntriesExceedingMaxSetting() {
+    if(_entries.length > _settingsService.data.feedMaxEntries) {
+      _entries.removeRange(_settingsService.data.feedMaxEntries, _entries.length);
     }
+  }
 
-    // compares published dates
-    _allEntries.sort((a, b) => b.published.compareTo(a.published));
-
-    if(_allEntries.length > _settingsService.data.feedMaxEntries) {
-      _allEntries.removeRange(_settingsService.data.feedMaxEntries, _allEntries.length);
-    }
-
-    for(var entry in _allEntries) {
-      var published = DateTime(entry.published.year, entry.published.month, entry.published.day);
+  /// Sorts entries into date-categories like today, yesterday, 
+  /// this week, and so on.
+  void _sortEntriesByDate() {
+    for(var entry in _entries) {
+      var published = DateTime(entry.dateTime.year, entry.dateTime.month, entry.dateTime.day);
 
       if(DateTimeHelper.isToday(published)) {
         today.add(entry);
@@ -110,5 +176,15 @@ class FeedService {
         older.add(entry);
       }
     }
+  }
+
+  /// Get a feed source by checking if the [address] contains 
+  /// the base URL.
+  /// 
+  /// For example, a Youtube source will use youtube.com as the 
+  /// sourceAddress property. The [address] parameter in this 
+  /// is checked if it contains youtube.com
+  FeedSourceModel _getSourceByAddress(String address) {
+    return _sources.firstWhere((x) => address.contains(x.sourceAddress), orElse: () => null);
   }
 }

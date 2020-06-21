@@ -1,4 +1,4 @@
-import 'package:mediadrip/services/feed/feed_thumbnail.dart';
+import 'package:mediadrip/services/feed/models/feed_thumbnail.dart';
 import 'package:mediadrip/services/feed/helper.dart';
 import 'package:xml/xml.dart';
 

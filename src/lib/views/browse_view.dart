@@ -26,16 +26,16 @@ class BrowseView extends View {
               children: [
                 Container(
                   height: 300,
-                  child: Image.network(model.mediaThumbnail),
+                  child: model.currentDrip.image,
                 ),
                 Text(
-                  model.mediaTitle,
+                  model.currentDrip.title,
                   style: Theme.of(context).textTheme.headline5
                 ),
-                Text(model.mediaDate),
+                Text(model.currentDrip.dateTime.toString()),
                 Divider(),
                 Text(
-                  model.mediaDescription,
+                  model.currentDrip.description,
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ],

@@ -3,6 +3,7 @@ import 'package:mediadrip/common/theme.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/services/view_manager_service.dart';
+import 'package:mediadrip/sources.dart';
 import 'package:provider/provider.dart';
 
 class MediaDrip extends StatelessWidget {
@@ -22,9 +23,8 @@ class MediaDrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // load our settings ...
     _settingsService.load();
-
+    
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -45,6 +45,8 @@ class MediaDrip extends StatelessWidget {
 
 void main() {
   setupLocator();
+
+  loadSources();
 
   runApp(MediaDrip());
 }
