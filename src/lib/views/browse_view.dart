@@ -20,9 +20,7 @@ class BrowseView extends View {
       model: BrowseViewModel(context: context, arguments: routeArguments),
       builder: (model) {
         return Scaffold(
-          body: Padding(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: (model.isViewingMedia) ? ListView(
+          body: (model.isViewingMedia) ? ListView(
               children: [
                 Container(
                   height: 300,
@@ -32,20 +30,18 @@ class BrowseView extends View {
                   model.currentDrip.title,
                   style: Theme.of(context).textTheme.headline5
                 ),
-                Text(model.currentDrip.dateTimeFormatted),
+                Text('${model.currentDrip.author} \u22C5 ${model.currentDrip.dateTimeFormatted}'),
                 Divider(),
-                Text(model.currentDrip.author),
                 Text(
                   model.currentDrip.description,
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ],
-            ) : Text('File picker not yet available.')
-          ),
+            ) : Text('File picker not yet available.'),
           floatingActionButton: FloatingActionButton(
             onPressed: () => model.downloadMedia(),
             child: Icon(Icons.save),
-          ),
+          )
         );
       },
     );

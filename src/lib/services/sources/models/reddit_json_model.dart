@@ -9,10 +9,10 @@ class RedditJsonDataModel {
   RedditJsonDataModel.fromJson(Map<String, dynamic> json)
     : title = json['data']['title'],
       author = json['data']['author'],
-      created = json['data']['created'],
+      created = json['data']['created_utc'],
       thumbnail = json['data']['thumbnail'],
       url = json['data']['url'],
-      textContent = json['data']['selftext'];
+      textContent = json['data']['selftext'] ?? '';
 }
 
 class RedditJsonModel {

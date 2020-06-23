@@ -125,6 +125,11 @@ class FeedService {
   Future<void> _downloadFeeds() async {
     // clear the entries in case the feed is being refreshed...
     _entries.clear();
+    today.clear();
+    yesterday.clear();
+    thisWeek.clear();
+    thisMonth.clear();
+    older.clear();
 
     for(var feed in feeds.entries) {
       var source = _getSourceByAddress(feed.value);

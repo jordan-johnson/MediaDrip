@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:mediadrip/common/models/drip_model.dart';
-import 'package:mediadrip/common/models/feed_source_model.dart';
-import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/settings_service.dart';
+import 'package:mediadrip/services/sources/base_source.dart';
 import 'package:mediadrip/services/sources/models/reddit_json_model.dart';
-import 'package:mediadrip/utilities/date_time_helper.dart';
 
-class RedditSource extends FeedSourceModel {
-  final SettingsService _settingsService = locator<SettingsService>();
-
+class RedditSource extends BaseSource {
   @override
   String get sourceAddress => 'reddit.com';
+
+  @override
+  Future<void> download(String address) async {
+    
+  }
 
   @override
   Future<List<DripModel>> parse(String content) async {
@@ -32,7 +32,7 @@ class RedditSource extends FeedSourceModel {
           entry.url,
           entry.author,
           entry.title,
-          entry.author,
+          entry.textContent,
           entry.created,
           entry.thumbnail
         );

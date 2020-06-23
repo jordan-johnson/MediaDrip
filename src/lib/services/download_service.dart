@@ -2,9 +2,20 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:mediadrip/common/models/download_source_model.dart';
 
 class DownloadService {
   final Client _client = http.Client();
+
+  List<DownloadSourceModel> _sources = List<DownloadSourceModel>();
+
+  void addSource<T extends DownloadSourceModel>(T source) {
+    if(source.sourceAddress.isEmpty) {
+      throw Exception('Source address canniot be empty');
+    }
+
+    _sources.add(source);
+  }
 
   Future<String> get(String address) async {
     var response = await _client.get(address);

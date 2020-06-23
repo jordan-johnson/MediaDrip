@@ -1,10 +1,15 @@
 import 'package:mediadrip/common/models/drip_model.dart';
-import 'package:mediadrip/common/models/feed_source_model.dart';
 import 'package:mediadrip/services/feed/models/feed_model.dart';
+import 'package:mediadrip/services/sources/base_source.dart';
 
-class YoutubeSource extends FeedSourceModel {
+class YoutubeSource extends BaseSource {
   @override
   String get sourceAddress => 'youtube.com';
+
+  @override
+  Future<void> download(String address) async {
+    
+  }
 
   @override
   Future<List<DripModel>> parse(String content) async {

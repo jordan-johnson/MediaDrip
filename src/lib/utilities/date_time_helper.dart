@@ -22,6 +22,6 @@ class DateTimeHelper {
   static DateTime unixToDateTime(double timestamp) {
     var update = timestamp.round() * 1000;
 
-    return DateTime.fromMillisecondsSinceEpoch(update);
+    return DateTime.fromMillisecondsSinceEpoch(update, isUtc: true).toLocal();
   }
 }
