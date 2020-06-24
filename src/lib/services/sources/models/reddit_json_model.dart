@@ -5,6 +5,8 @@ class RedditJsonDataModel {
   final String url;
   final double created;
   final String textContent;
+  final bool isVideo;
+  final bool isSelfText;
 
   RedditJsonDataModel.fromJson(Map<String, dynamic> json)
     : title = json['data']['title'],
@@ -12,7 +14,9 @@ class RedditJsonDataModel {
       created = json['data']['created_utc'],
       thumbnail = json['data']['thumbnail'],
       url = json['data']['url'],
-      textContent = json['data']['selftext'] ?? '';
+      textContent = json['data']['selftext'] ?? '',
+      isVideo = json['data']['is_video'],
+      isSelfText = json['data']['is_self'];
 }
 
 class RedditJsonModel {

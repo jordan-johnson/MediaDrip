@@ -59,6 +59,7 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/settings.json
+    - lib/assets/youtube-dl.conf
   
   fonts:
     - family: CormorantGaramond

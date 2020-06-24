@@ -43,7 +43,7 @@ class PathService {
   /// Refer to [documents] and [mediaDripFolderName] for more information.
   Future<String> get mediaDripDirectory async {
     var documentsPath = await documents;
-    var directory = await _createDirectoryIfNotExists('$documentsPath\\$mediaDripFolderName\\');
+    var directory = await _createDirectoryIfNotExists('$documentsPath\\$mediaDripFolderName');
 
     return directory.path;
   }
@@ -53,7 +53,7 @@ class PathService {
   /// Refer to [mediaDripFolderName] for more information.
   Future<String> get configDirectory async {
     var rootPath = await mediaDripDirectory;
-    var directory = await _createDirectoryIfNotExists('$rootPath\\$configFolderName\\');
+    var directory = await _createDirectoryIfNotExists('$rootPath\\$configFolderName');
 
     return directory.path;
   }
@@ -63,7 +63,7 @@ class PathService {
   /// Refer to [mediaDripFolderName] for more information.
   Future<String> get downloadsDirectory async {
     var rootPath = await mediaDripDirectory;
-    var directory = await _createDirectoryIfNotExists('$rootPath\\$downloadsFolderName\\');
+    var directory = await _createDirectoryIfNotExists('$rootPath\\$downloadsFolderName');
 
     return directory.path;
   }

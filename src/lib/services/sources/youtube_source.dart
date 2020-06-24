@@ -7,7 +7,7 @@ class YoutubeSource extends BaseSource {
   String get sourceAddress => 'youtube.com';
 
   @override
-  Future<void> download(String address) async {
+  Future<void> download(DripModel drip) async {
     
   }
 
@@ -17,15 +17,17 @@ class YoutubeSource extends BaseSource {
     var drips = List<DripModel>();
 
     for(var entry in xml.entries) {
-      // var drip = DripModel(
-      //   link: entry.link,
-      //   title: entry.media.title,
-      //   description: entry.media.description,
-      //   dateTime: entry.published,
-      //   image: entry.media.thumbnail.url
-      // );
-
-      var drip = await DripModel().initialize(entry.link, entry.author.name, entry.media.title, entry.media.description, entry.published, entry.media.thumbnail.url);
+      var drip = DripModel(
+        type: DripType.video,
+        link: entry.link,
+        isDownloadableLink: true,
+        title: entry.media.title,
+        author: entry.author.name,
+        description: entry.media.description,
+        dateTime: entry.published,
+        thumbnail: entry.media.thumbnail.url,
+        image: entry.media.thumbnail.url
+      );
 
       drips.add(drip);
     }

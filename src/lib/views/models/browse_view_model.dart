@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/download_service.dart';
+import 'package:mediadrip/utilities/image_helper.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 
 class BrowseViewModel extends ViewModel {
   final Object arguments;
 
-  final DownloadService _youtubeDownloaderService = locator<DownloadService>();
+  final DownloadService _downloadService = locator<DownloadService>();
 
   bool get isViewingMedia => arguments != null;
 
@@ -26,7 +27,13 @@ class BrowseViewModel extends ViewModel {
     }
   }
 
+  Future<Image> getFullSizeImage() async {
+    return await NetworkImageHelper(url: currentDrip.image).get();
+  }
+
   Future<void> downloadMedia() async {
+    print('downloading');
+    await _downloadService.saveDripToDisk(currentDrip);
     // await _youtubeDownloaderService.download((_) => null, [currentDrip.link]);
   }
 }

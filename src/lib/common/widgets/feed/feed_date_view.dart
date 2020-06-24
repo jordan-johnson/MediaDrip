@@ -5,6 +5,7 @@ import 'package:mediadrip/common/widgets/drip_header.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/feed/models/feed_entry.dart';
 import 'package:mediadrip/services/view_manager_service.dart';
+import 'package:mediadrip/utilities/image_helper.dart';
 
 class FeedDateView extends StatelessWidget {
   final String label;
@@ -37,7 +38,20 @@ class FeedDateView extends StatelessWidget {
               leading: SizedBox(
                 width: 100,
                 height: 200,
-                child: Image(fit: BoxFit.cover, image: entries[index].image.image)
+                child: FutureBuilder<Image>(
+                  future: NetworkImageHelper(url: entries[index].thumbnail).get(),
+                  builder: (_, snapshot) {
+                    if(snapshot.connectionState == ConnectionState.done) {
+                      if(snapshot.hasData) {
+                        return Image(image: snapshot.data.image, fit: BoxFit.cover);
+                      } else {
+                        return Image.asset('lib/assets/images/image_unavailable.png', fit: BoxFit.cover);
+                      }
+                    } else {
+                      return Container(height: 60, child: Center(child: CircularProgressIndicator()));
+                    }
+                  },
+                )
               ),
               title: Align(
                 alignment: Alignment.topLeft,
