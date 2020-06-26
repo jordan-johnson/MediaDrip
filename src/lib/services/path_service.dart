@@ -102,9 +102,9 @@ class PathService {
     var finalizedDirectory = await convertDirectoryEnumToPath(directory);
 
     if(await Directory(finalizedDirectory).exists()) {
-      var validatedFileName = validateFileName('$finalizedDirectory/$fileName');
+      var validatedFileName = validateFileName('$fileName');
 
-      await File('$validatedFileName').writeAsString(contents);
+      await File('$finalizedDirectory/$validatedFileName').writeAsString(contents);
     }
   }
 
@@ -128,16 +128,21 @@ class PathService {
     return File('$finalizeDirectory/$fileName');
   }
 
+  /// Returns the path from a given [fileName] and [directory].
   Future<String> getPathOfFileInDirectory(String fileName, AvailableDirectories directory) async {
     var file = await getFileInDirectory(fileName, directory);
 
     return file.path;
   }
 
+  /// Validates a [fileName] by removing invalid characters.
+  /// 
+  /// Returned is the valid filename.
   String validateFileName(String fileName) {
     return fileName.replaceAll(RegExp('[\\~#%&*{}/:<>?|"-]'), '');
   }
 
+  /// Splits [fileName] and returns the last occurrence.
   String getExtensionFromFileName(String fileName) {
     return fileName.split('.').last;
   }

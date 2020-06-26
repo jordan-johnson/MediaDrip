@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/youtube_downloader_service.dart';
+import 'package:mediadrip/services/download_service.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 
 class DownloadViewModel extends ViewModel {
-  final YoutubeDownloaderService _downloaderService = locator<YoutubeDownloaderService>();
+  final DownloadService _downloaderService = locator<DownloadService>();
 
   final TextEditingController inputController = TextEditingController();
   final TextEditingController outputController = TextEditingController();
 
-  bool get isDownloadServiceRunning => _downloaderService.state != DownloaderState.idle;
+  bool get isDownloadServiceRunning => false;
   String get downloadButtonLabel => isDownloadServiceRunning ? 'Wait...' : 'Download';
 
   DownloadViewModel({@required BuildContext context}) : super(context: context);
@@ -20,13 +20,13 @@ class DownloadViewModel extends ViewModel {
     address = address ?? inputController.text;
     inputController.clear();
 
-    _downloaderService.download((message) => _updateOutput(message), [address]);
+    // _downloaderService
   }
 
   void update() {
     _updateOutput('Attempting to update youtube-dl...', reset: true);
 
-    _downloaderService.update((message) => _updateOutput(message));
+    // _downloaderService.update((message) => _updateOutput(message));
   }
 
   @override

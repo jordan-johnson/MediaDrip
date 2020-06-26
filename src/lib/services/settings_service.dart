@@ -29,7 +29,7 @@ class SettingsService {
   SettingsModel data;
 
   /// [SettingsService] provides functionality for storing application settings for later use.
-  // SettingsService();
+  SettingsService();
 
   /// Asynchronously loads the settings json file.
   /// 
