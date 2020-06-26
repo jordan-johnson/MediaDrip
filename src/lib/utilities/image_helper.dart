@@ -16,7 +16,7 @@ class NetworkImageHelper {
     if(!isImage)
       return null;
     
-    var content = await _downloadService.getBytes(this.url);
+    var content = await _downloadService.getResponseBodyAsBytes(this.url);
 
     if(content != null) {
       return Image.memory(content);

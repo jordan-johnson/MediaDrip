@@ -91,7 +91,7 @@ class FeedService {
   /// Adds a source to the collection for later use in 
   /// parsing web feeds.
   void addSource<T extends FeedSourceModel>(T source) {
-    if(source.sourceAddress.isEmpty) {
+    if(source.lookupAddresses == null) {
       throw Exception('Source address cannot be empty!');
     }
 
@@ -132,10 +132,10 @@ class FeedService {
     older.clear();
 
     for(var feed in feeds.entries) {
-      var source = _getSourceByAddress(feed.value);
+      var source = _getSourceByAddressLookup(feed.value);
 
       if(source != null) {
-        var content = await _downloadService.get(feed.value);
+        var content = await _downloadService.getResponseBodyAsString(feed.value);
         var drips = await source.parse(content);
 
         if(drips != null) {
@@ -189,7 +189,15 @@ class FeedService {
   /// For example, a Youtube source will use youtube.com as the 
   /// sourceAddress property. The [address] parameter in this 
   /// is checked if it contains youtube.com
-  FeedSourceModel _getSourceByAddress(String address) {
-    return _sources.firstWhere((x) => address.contains(x.sourceAddress), orElse: () => null);
+  FeedSourceModel _getSourceByAddressLookup(String address) {
+    for(var source in _sources) {
+      for(var lookup in source.lookupAddresses) {
+        if(address.contains(lookup)) {
+          return source;
+        }
+      }
+    }
+
+    return null;
   }
 }

@@ -32,8 +32,6 @@ class BrowseViewModel extends ViewModel {
   }
 
   Future<void> downloadMedia() async {
-    print('downloading');
-    await _downloadService.saveDripToDisk(currentDrip);
-    // await _youtubeDownloaderService.download((_) => null, [currentDrip.link]);
+    await _downloadService.dripToDisk(currentDrip);
   }
 }

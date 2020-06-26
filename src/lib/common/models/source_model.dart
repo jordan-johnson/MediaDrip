@@ -1,3 +1,3 @@
 abstract class SourceModel {
-  String get sourceAddress;
+  List<String> get lookupAddresses;
 }

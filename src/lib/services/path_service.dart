@@ -35,7 +35,7 @@ class PathService {
   Future<String> get documents async {
     var directory = await getApplicationDocumentsDirectory();
 
-    return directory.path;
+    return directory.path.replaceAll('\\', '/');
   }
 
   /// Returns the application directory found within the device's documents.
@@ -43,7 +43,7 @@ class PathService {
   /// Refer to [documents] and [mediaDripFolderName] for more information.
   Future<String> get mediaDripDirectory async {
     var documentsPath = await documents;
-    var directory = await _createDirectoryIfNotExists('$documentsPath\\$mediaDripFolderName');
+    var directory = await _createDirectoryIfNotExists('$documentsPath/$mediaDripFolderName');
 
     return directory.path;
   }
@@ -53,7 +53,7 @@ class PathService {
   /// Refer to [mediaDripFolderName] for more information.
   Future<String> get configDirectory async {
     var rootPath = await mediaDripDirectory;
-    var directory = await _createDirectoryIfNotExists('$rootPath\\$configFolderName');
+    var directory = await _createDirectoryIfNotExists('$rootPath/$configFolderName');
 
     return directory.path;
   }
@@ -63,7 +63,7 @@ class PathService {
   /// Refer to [mediaDripFolderName] for more information.
   Future<String> get downloadsDirectory async {
     var rootPath = await mediaDripDirectory;
-    var directory = await _createDirectoryIfNotExists('$rootPath\\$downloadsFolderName');
+    var directory = await _createDirectoryIfNotExists('$rootPath/$downloadsFolderName');
 
     return directory.path;
   }
@@ -92,7 +92,7 @@ class PathService {
   Future<bool> fileExistsInDirectory(String fileName, AvailableDirectories directory) async {
     var finalizedDirectory = await convertDirectoryEnumToPath(directory);
 
-    return await File('$finalizedDirectory\\$fileName').exists();
+    return await File('$finalizedDirectory/$fileName').exists();
   }
 
   /// Creates a file with the specified [fileName] and [contents] within the given [directory].
@@ -102,7 +102,22 @@ class PathService {
     var finalizedDirectory = await convertDirectoryEnumToPath(directory);
 
     if(await Directory(finalizedDirectory).exists()) {
-      await File('$finalizedDirectory\\$fileName').writeAsString(contents);
+      var validatedFileName = validateFileName('$finalizedDirectory/$fileName');
+
+      await File('$validatedFileName').writeAsString(contents);
+    }
+  }
+
+  /// Creates a file with the specified [fileName] and [contents] within the given [directory].
+  /// 
+  /// Files are always overwritten.
+  Future<void> createFileInDirectoryFromBytes(String fileName, List<int> contents, AvailableDirectories directory) async {
+    var finalizedDirectory = await convertDirectoryEnumToPath(directory);
+
+    if(await Directory(finalizedDirectory).exists()) {
+      var validatedFileName = validateFileName('$fileName');
+
+      await File('$finalizedDirectory/$validatedFileName').writeAsBytes(contents);
     }
   }
 
@@ -110,7 +125,21 @@ class PathService {
   Future<File> getFileInDirectory(String fileName, AvailableDirectories directory) async {
     var finalizeDirectory = await convertDirectoryEnumToPath(directory);
 
-    return File('$finalizeDirectory\\$fileName');
+    return File('$finalizeDirectory/$fileName');
+  }
+
+  Future<String> getPathOfFileInDirectory(String fileName, AvailableDirectories directory) async {
+    var file = await getFileInDirectory(fileName, directory);
+
+    return file.path;
+  }
+
+  String validateFileName(String fileName) {
+    return fileName.replaceAll(RegExp('[\\~#%&*{}/:<>?|"-]'), '');
+  }
+
+  String getExtensionFromFileName(String fileName) {
+    return fileName.split('.').last;
   }
 
   /// Safely returns a directory. If the directory does not exist, it will be created first 

@@ -1,26 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:mediadrip/common/models/download_instructions_model.dart';
 import 'package:mediadrip/common/models/download_source_model.dart';
 import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/path_service.dart';
-import 'package:mediadrip/services/settings_service.dart';
 
 class DownloadService {
   final Client _client = http.Client();
 
   final PathService _pathService = locator<PathService>();
 
-  final SettingsService _settingsService = locator<SettingsService>();
-
   final String _configFileName = 'youtube-dl.conf';
 
-  String _downloadsDirectory = '';
+  Future<String> get _downloadsDirectory async => await _pathService.downloadsDirectory;
 
   String _configFullPath = '';
 
@@ -28,71 +25,105 @@ class DownloadService {
 
   Future<void> initialize() async {
     var configExists = await _pathService.fileExistsInDirectory(_configFileName, AvailableDirectories.configuration);
-    _downloadsDirectory = await _pathService.downloadsDirectory;
 
     if(!configExists) {
-      var getYoutubeDLAsset = await rootBundle.loadString('lib/assets/$_configFileName');
+      var getConfigurationAsset = await rootBundle.loadString('lib/assets/$_configFileName');
 
-      getYoutubeDLAsset = getYoutubeDLAsset.replaceAll('{directory_to_be_replaced}', _downloadsDirectory.replaceAll('\\', '/'));
+      getConfigurationAsset = getConfigurationAsset.replaceAll('{directory_to_be_replaced}', await _downloadsDirectory);
 
-      await _pathService.createFileInDirectory(_configFileName, getYoutubeDLAsset, AvailableDirectories.configuration);
+      await _pathService.createFileInDirectory(_configFileName, getConfigurationAsset, AvailableDirectories.configuration);
     }
 
-    var file = await _pathService.getFileInDirectory(_configFileName, AvailableDirectories.configuration);
-    _configFullPath = file.path.replaceAll('\\', '\\\\');
+    if(_configFullPath.isEmpty)
+      _configFullPath = await _pathService.getPathOfFileInDirectory(_configFileName, AvailableDirectories.configuration);
   }
 
   void addSource<T extends DownloadSourceModel>(T source) {
-    if(source.sourceAddress.isEmpty) {
+    if(source.lookupAddresses == null) {
       throw Exception('Source address canniot be empty');
     }
 
     _sources.add(source);
   }
 
-  Future<String> get(String address) async {
-    var response = await _client.get(address);
-    
-    if(response.statusCode == 200) {
-      return response.body;
-    }
+  Future<String> getResponseBodyAsString(String address) async {
+    var response = await _getResponseIfSuccessful(address);
 
-    return null;
-  }
-
-  Future<Uint8List> getBytes(String address) async {
-    try {
-      var response = await _client.get(address);
-
-      if(response.statusCode == 200) {
-        return response.bodyBytes;
-      }
-    } catch(Exception) {
+    if(response == null)
       return null;
-    }
-
-    return null;
+    
+    return response.body;
   }
 
-  Future<void> saveDripToDisk(DripModel drip) async {
-    print('called');
+  Future<List<int>> getResponseBodyAsBytes(String address) async {
+    var response = await _getResponseIfSuccessful(address);
 
-    if(!drip.isDownloadableLink)
+    if(response == null)
+      return null;
+    
+    return response.bodyBytes;
+  }
+
+  Future<void> dripToDisk(DripModel drip) async {
+    if(!drip.isDownloadableLink || drip.type == DripType.unset)
       return;
 
-    if(drip.type == DripType.video) {
-      print('$_configFullPath');
-      await Process.start('youtube-dl', ['${drip.link}', '--config-location', '$_configFullPath']).then((process) {
-        process.stdout
-          .transform(utf8.decoder)
-          .listen((data) => print(data));
-      });
+    var source = _getSourceByAddressLookup(drip.link);
+
+    if(source != null) {
+      print('dripping');
+      var instructions = source.configureDownload(drip);
+
+      await _executeInstructions(instructions);
+    }
+  }
+
+  Future<Response> _getResponseIfSuccessful(String address) async {
+    var response = await _client.get(address);
+
+    if(response.statusCode == 200) {
+      return response;
     }
 
-    // var source = _sources.firstWhere((x) => drip.link.contains(x.sourceAddress));
+    return null;
+  }
 
-    // if(source != null) {
-    //   await source.download(drip);
-    // }
+  DownloadSourceModel _getSourceByAddressLookup(String address) {
+    for(var source in _sources) {
+      for(var lookup in source.lookupAddresses) {
+        if(address.contains(lookup)) {
+          return source;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> _executeInstructions(DownloadInstructionsModel instructions) async {
+    await initialize();
+
+    print('execute instruct');
+
+    switch(instructions.type) {
+      case DripType.image:
+        var fileExtension = _pathService.getExtensionFromFileName(instructions.address);
+        var fileName = '${instructions.info}.$fileExtension';
+        var bytes = await getResponseBodyAsBytes(instructions.address);
+
+        await _pathService.createFileInDirectoryFromBytes(fileName, bytes, AvailableDirectories.downloads);
+      break;
+      case DripType.audio:
+      case DripType.video:
+      default:
+        print('why is this not called??');
+        print('$_configFullPath');
+        await Process.start('youtube-dl', ['${instructions.address}', '--config-location', '$_configFullPath']).then((process) {
+          process.stdout
+            .transform(utf8.decoder)
+            .listen((data) => print(data));
+        });
+      break;
+    }
   }
 }

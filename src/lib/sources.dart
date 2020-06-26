@@ -13,6 +13,7 @@ void loadSources() {
 
   feedService.addSource<YoutubeSource>(youtubeSource);
   feedService.addSource<RedditSource>(redditSource);
-
+  
+  downloadService.addSource<RedditSource>(redditSource);
   downloadService.addSource<YoutubeSource>(youtubeSource);
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:mediadrip/common/models/download_instructions_model.dart';
 import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/services/sources/base_source.dart';
 import 'package:mediadrip/services/sources/models/reddit_json_model.dart';
@@ -6,21 +7,29 @@ import 'package:mediadrip/utilities/date_time_helper.dart';
 
 class RedditSource extends BaseSource {
   @override
-  String get sourceAddress => 'reddit.com';
+  List<String> get lookupAddresses => [
+    'reddit.com',
+    'i.redd.it',
+    'v.redd.it',
+    'i.imgur.com',
+  ];
 
   @override
-  Future<void> download(DripModel drip) async {
+  DownloadInstructionsModel configureDownload(DripModel drip) {
+    String address;
+
     switch(drip.type) {
       case DripType.image:
-        //
+        address = drip.image;
       break;
+      case DripType.audio:
       case DripType.video:
-        //
-      break;
-      case DripType.unset:
       default:
-        return;
+        address = drip.link;
+      break;
     }
+
+    return DownloadInstructionsModel(info: drip.title, type: drip.type, address: address);
   }
 
   @override

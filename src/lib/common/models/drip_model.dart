@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 enum DripType {
   unset,
   image,
-  video
+  audio,
+  video,
 }
 
 class DripModel {

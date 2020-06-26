@@ -1,14 +1,18 @@
+import 'package:mediadrip/common/models/download_instructions_model.dart';
 import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/services/feed/models/feed_model.dart';
 import 'package:mediadrip/services/sources/base_source.dart';
 
 class YoutubeSource extends BaseSource {
   @override
-  String get sourceAddress => 'youtube.com';
+  List<String> get lookupAddresses => [
+    'youtube.com'
+  ];
 
   @override
-  Future<void> download(DripModel drip) async {
-    
+  DownloadInstructionsModel configureDownload(DripModel drip) {
+    print('config ${drip.link}');
+    return DownloadInstructionsModel(info: drip.title, type: drip.type, address: drip.link);
   }
 
   @override
