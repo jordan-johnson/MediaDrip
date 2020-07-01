@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/common/widgets/drip_header.dart';
+import 'package:mediadrip/common/widgets/drip_wrapper.dart';
+import 'package:mediadrip/utilities/routes.dart';
 import 'package:mediadrip/views/providers/view_model_provider.dart';
-import 'package:mediadrip/views/view.dart';
 import 'package:mediadrip/views/models/download_view_model.dart';
 
-class DownloadView extends View {
-  @override
-  String get label => 'Download';
-  
-  @override
-  String get routeAddress => '/download';
-
-  @override
-  IconData get icon => Icons.arrow_downward;
+class DownloadView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<DownloadViewModel>(
       model: DownloadViewModel(context: context),
       builder: (model) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+        return DripWrapper(
+          title: 'Download',
+          route: Routes.download,
           child: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +27,7 @@ class DownloadView extends View {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DripHeader(
-                        icon: icon,
+                        icon: Icons.arrow_downward,
                         header: 'Let\'s start dripping.',
                         subHeader: 'Downloading without issue requires both ffmpeg and youtube-dl to be installed and added to your system variables.'
                       ),
@@ -80,7 +74,7 @@ class DownloadView extends View {
                 ),
               ],
             )
-          )
+          ),
         );
       },
     );

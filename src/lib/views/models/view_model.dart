@@ -6,9 +6,6 @@ class ViewModel extends ChangeNotifier {
   final BuildContext context;
   final SettingsService settings;
 
-  // ViewModel({@required this.context}) :
-  //   settings = locator<SettingsService>();
-
   ViewModel({@required this.context}) : settings = locator<SettingsService>() {
     initialize();
   }

@@ -6,7 +6,7 @@
 
 * Web feed
 
-    * Landing page/home view now shows a web feed (currently only supports Youtube... `https://www.youtube.com/feeds/videos.xml?channel_id=<INSERT_ID>`)
+    * Landing page/home view now shows a web feed (currently supports Reddit and Youtube)
 
     * `feed.txt` located in `My Documents/MediaDrip/config/` houses each web address per line.
 
@@ -17,6 +17,10 @@
     * Clicking on an entry will take the user to the browse view which displays the entry's thumbnail, title, date, and description. A save button at the bottom right of the screen saves the media.
 
 * Settings layout updated
+
+### Fixes
+
+* Refactored views because I wasn't happy with the ViewManagerService. I may revisit it some day but for now things are manually written out.
 
 ## 1.0.1 (June 16, 2020)
 

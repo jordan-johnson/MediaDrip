@@ -6,32 +6,26 @@ import 'package:mediadrip/utilities/image_helper.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 
 class BrowseViewModel extends ViewModel {
-  final Object arguments;
+  final DripModel drip;
 
   final DownloadService _downloadService = locator<DownloadService>();
 
-  bool get isViewingMedia => arguments != null;
+  bool get isViewingMedia => drip != null;
 
-  DripModel currentDrip;
-
-  BrowseViewModel({@required BuildContext context, this.arguments}) : super(context: context);
+  BrowseViewModel({@required BuildContext context, this.drip}) : super(context: context);
 
   @override
   Future<void> initialize() async {
-    if(arguments != null) {
-      if(arguments is DripModel) {
-        currentDrip = arguments;
-
-        notifyListeners();
-      }
+    if(drip != null) {
+      notifyListeners();
     }
   }
 
   Future<Image> getFullSizeImage() async {
-    return await NetworkImageHelper(url: currentDrip.image).get();
+    return await NetworkImageHelper(url: drip.image).get();
   }
 
   Future<void> downloadMedia() async {
-    await _downloadService.dripToDisk(currentDrip);
+    await _downloadService.dripToDisk(drip);
   }
 }

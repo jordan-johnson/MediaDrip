@@ -35,7 +35,7 @@ class SettingsService {
   /// 
   /// If the settings file does not exist, one will be created based on the template found in 
   /// the assets folder.
-  Future<void> load() async {
+  Future<SettingsModel> load() async {
     String contents;
 
     var fileExists = await _path.fileExistsInDirectory(_settingsFileName, _settingsDirectoryEnum);
@@ -53,6 +53,8 @@ class SettingsService {
 
     if(!fileExists)
       await _writeInitialPaths();
+
+    return data;
   }
 
   /// Encodes the current [SettingsModel] and saves the file.

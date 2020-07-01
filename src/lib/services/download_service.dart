@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -61,6 +60,14 @@ class DownloadService {
     }
 
     _sources.add(source);
+  }
+
+  /// Reads content of youtube configuration file.
+  Future<String> readContentsOfConfiguration() async {
+    var configFile = await _pathService.getFileInDirectory(_configFileName, AvailableDirectories.configuration);
+    var contents = await configFile.readAsString();
+
+    return contents;
   }
 
   /// Calls [_getResponseIfSuccessful] to return a response. On success, the response 

@@ -34,7 +34,7 @@ class SettingsModel extends ChangeNotifier {
   SettingsModel();
 
   SettingsModel.fromJson(Map<String, dynamic> json) {
-    _isDarkMode = json['dark_mode'];
+    isDarkMode = json['dark_mode'];
     _feedMaxEntries = json['feed_max_entries'];
     _applicationStorage = json['application_storage'];
     _youtubeConfiguration = json['youtube_conf'];

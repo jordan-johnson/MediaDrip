@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/feed/models/feed_entry.dart';
 import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 

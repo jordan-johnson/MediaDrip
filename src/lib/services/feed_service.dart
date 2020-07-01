@@ -98,6 +98,29 @@ class FeedService {
     _sources.add(source);
   }
 
+  Future<Map<String, String>> getFeedsFromConfig() async {
+    Map<String, String> feeds = Map<String, String>();
+
+    var file = await _pathService.getFileInDirectory(_feedListFileName, _configDirectory);
+    var lines = await file.readAsLines();
+    
+    for(var line in lines) {
+      var split = line.split(',');
+
+      if(split == null)
+        continue;
+
+      var name = split[0];
+      var address = split[1];
+
+      if(name != null && address != null) {
+        feeds[name] = address;
+      }
+    }
+
+    return feeds;
+  }
+
   /// Map the feeds by name of the feed and its address.
   /// 
   /// The feed data will be separated by comma.
