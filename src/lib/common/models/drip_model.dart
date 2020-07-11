@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mediadrip/common/models/feed/index.dart';
 
 enum DripType {
   unset,
@@ -8,7 +9,7 @@ enum DripType {
   video,
 }
 
-class DripModel {
+class DripModel implements IFeedItem {
   final DripType type;
   final String link;
   final bool isDownloadableLink;
@@ -18,8 +19,6 @@ class DripModel {
   final String thumbnail;
   final String image;
   final DateTime dateTime;
-
-  String get dateTimeFormatted => _formatDateTime();
 
   DripModel({
     @required this.type,
@@ -33,7 +32,8 @@ class DripModel {
     this.description
   });
 
-  String _formatDateTime() {
+  @override
+  String dateTimeFormatted() {
     if(dateTime == null) return null;
 
     var dateFormat = DateFormat.yMMMMd('en_US').add_jm();

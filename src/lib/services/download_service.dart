@@ -118,6 +118,18 @@ class DownloadService {
     }
   }
 
+  /// Provides instructions to [_executeInstructions] to try downloading via Youtube-DL.
+  Future<void> downloadUsingYoutubeDownloader(String address) async {
+    var instructions = DownloadInstructionsModel(address: address, type: DripType.unset, info: null);
+
+    await _executeInstructions(instructions);
+  }
+
+  /// This needs to be changed in the future to support package managers.
+  Future<void> updateYoutubeDownloader() async {
+    await Process.start('youtube-dl', ['-U', '-q']);
+  }
+
   /// Sends a GET request to our http client [_client] and awaits a response.
   /// 
   /// If the response's status code is 200 (OK) then return the response. This will then
@@ -182,6 +194,7 @@ class DownloadService {
 
         await _pathService.createFileInDirectoryFromBytes(fileName, bytes, AvailableDirectories.downloads);
       break;
+      case DripType.unset:
       case DripType.audio:
       case DripType.video:
       default:

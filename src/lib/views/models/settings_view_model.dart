@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/utilities/routes.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 

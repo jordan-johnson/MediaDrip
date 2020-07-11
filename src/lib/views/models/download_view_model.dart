@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/download_service.dart';
+import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/views/models/view_model.dart';
 
 class DownloadViewModel extends ViewModel {
-  final DownloadService _downloaderService = locator<DownloadService>();
+  final DownloadService _downloadService = DownloadService();
 
   final TextEditingController inputController = TextEditingController();
   final TextEditingController outputController = TextEditingController();
 
-  bool get isDownloadServiceRunning => false;
-  String get downloadButtonLabel => isDownloadServiceRunning ? 'Wait...' : 'Download';
+  bool _isDownloadServiceRunning = false;
+  bool get isDownloadServiceRunning => _isDownloadServiceRunning;
+
+  String get downloadButtonLabel => _isDownloadServiceRunning ? 'Wait...' : 'Download';
 
   DownloadViewModel({@required BuildContext context}) : super(context: context);
 
-  void download([String address]) {
-    _updateOutput('Attempting to download drip...', reset: true);
-
+  Future<void> download([String address]) async {
     address = address ?? inputController.text;
+
     inputController.clear();
 
-    // _downloaderService
+    _serviceRunning(true);
+
+    await _downloadService.downloadUsingYoutubeDownloader(address).then((_) => _serviceRunning(false));
   }
 
-  void update() {
-    _updateOutput('Attempting to update youtube-dl...', reset: true);
+  Future<void> update() async {
+    _serviceRunning(true);
 
-    // _downloaderService.update((message) => _updateOutput(message));
+    await _downloadService.updateYoutubeDownloader().then((_) => _serviceRunning(false));
   }
 
   @override
@@ -37,12 +39,12 @@ class DownloadViewModel extends ViewModel {
     outputController.dispose();
   }
 
-  void _updateOutput(String message, {bool reset = false}) {
-    var outputControllerText = outputController.text;
-    var appendTemplate = '$message\n$outputControllerText';
+  // this isnt notifying listeners
+  void _serviceRunning(bool running) {
+    _isDownloadServiceRunning = running;
 
-    message = reset ? message : appendTemplate;
+    print('test');
 
-    outputController.text = message;
+    notifyListeners();
   }
 }

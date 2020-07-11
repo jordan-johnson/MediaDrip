@@ -28,26 +28,29 @@ class MediaDrip extends StatelessWidget {
     return FutureBuilder(
       future: _settingsService.load(),
       builder: (BuildContext context, AsyncSnapshot<SettingsModel> snapshot) {
-        if(snapshot.hasData) {
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider.value(value: snapshot.data)
-            ],
-            child: Consumer<SettingsModel>(
-              builder: (_, model, __) {
-                return MaterialApp(
-                  title: this.title,
-                  theme: AppTheme.getThemeDynamic(model.isDarkMode),
-                  debugShowCheckedModeBanner: false,
-                  onGenerateRoute: Routes.routeGenerator,
-                  onUnknownRoute: Routes.errorRoute
-                );
-              },
-            ),
-          );
-        } else {
-          return Container();
+        if(snapshot.connectionState == ConnectionState.done) {
+          if(snapshot.hasData) {
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(value: snapshot.data)
+              ],
+              child: Consumer<SettingsModel>(
+                builder: (_, model, __) {
+                  return MaterialApp(
+                    title: this.title,
+                    theme: AppTheme.getThemeDynamic(model.isDarkMode),
+                    debugShowCheckedModeBanner: false,
+                    onGenerateRoute: Routes.routeGenerator,
+                    onUnknownRoute: Routes.errorRoute
+                  );
+                },
+              ),
+            );
+          } else {
+            return Container();
+          }
         }
+        return Container();
       },
     );
   }

@@ -7,6 +7,9 @@ import 'package:mediadrip/utilities/date_time_helper.dart';
 
 class RedditSource extends BaseSource {
   @override
+  String get display => 'Reddit';
+
+  @override
   List<String> get lookupAddresses => [
     'reddit.com',
     'i.redd.it',
@@ -30,6 +33,27 @@ class RedditSource extends BaseSource {
     }
 
     return DownloadInstructionsModel(info: drip.title, type: drip.type, address: address);
+  }
+
+  @override
+  Future<String> interpret(String address) async {
+    // if valid subreddit address
+    if(address.contains(lookupAddresses[0]) && address.contains('\/r\/')) {
+      // prepend https:// if not found
+      if(!address.contains('https://')) {
+        address = 'https://$address';
+      }
+
+      // append .json if not found
+      if(!address.contains('.json')) {
+        address += '.json';
+      }
+
+      return address;
+    }
+
+    // fail so feed won't be added
+    return null;
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mediadrip/common/widgets/drip_list_Item_collection.dart';
+import 'package:mediadrip/common/widgets/collections/index.dart';
 import 'package:mediadrip/common/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/routes.dart';
 import 'package:mediadrip/views/models/settings_view_model.dart';
@@ -26,8 +26,8 @@ class SettingsView extends StatelessWidget {
               child: Container(
                 child: ListView(
                   children: [
-                    DripListItemCollection(
-                      header: 'Storage Configuration',
+                    CardOfListTiles(
+                      title: 'Storage Configuration',
                       icon: Icons.folder,
                       children: [
                         TextField(
@@ -40,8 +40,8 @@ class SettingsView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    DripListItemCollection(
-                      header: 'Youtube Downloader',
+                    CardOfListTiles(
+                      title: 'Youtube Downloader',
                       icon: Icons.cloud_download,
                       children: [
                         ListTile(
@@ -68,8 +68,8 @@ class SettingsView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    DripListItemCollection(
-                      header: 'RSS Feed',
+                    CardOfListTiles(
+                      title: 'RSS Feed',
                       icon: Icons.rss_feed,
                       children: [
                         TextField(
@@ -96,8 +96,8 @@ class SettingsView extends StatelessWidget {
                         )
                       ],
                     ),
-                    DripListItemCollection(
-                      header: 'Theme Customization',
+                    CardOfListTiles(
+                      title: 'Theme Customization',
                       icon: Icons.smartphone,
                       children: [
                         ListTile(

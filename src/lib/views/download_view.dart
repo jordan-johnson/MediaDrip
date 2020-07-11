@@ -47,7 +47,7 @@ class DownloadView extends StatelessWidget {
                               icon: Icon(Icons.autorenew),
                               iconSize: 24,
                               color: Theme.of(context).primaryColor,
-                              onPressed: () => model.update(),
+                              onPressed: () async => await model.update(),
                             ),
                             RaisedButton(
                               child: Text(model.downloadButtonLabel),

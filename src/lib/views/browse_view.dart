@@ -43,7 +43,7 @@ class BrowseView extends StatelessWidget{
                   model.drip.title,
                   style: Theme.of(context).textTheme.headline5
                 ),
-                Text('${model.drip.author} \u22C5 ${model.drip.dateTimeFormatted}'),
+                Text('${model.drip.author} \u22C5 ${model.drip.dateTimeFormatted()}'),
                 Divider(),
                 Text(
                   model.drip.description ?? 'No description.',

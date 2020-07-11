@@ -7,11 +7,13 @@ class DripWrapper extends StatelessWidget {
   final String title;
   final String route;
   final Widget child;
+  final Widget floatingActionButton;
 
   DripWrapper({
     @required this.title,
     @required this.route,
-    @required this.child
+    @required this.child,
+    this.floatingActionButton
   });
 
   @override
@@ -20,6 +22,7 @@ class DripWrapper extends StatelessWidget {
       appBar: DripAppBar(title: this.title, route: this.route),
       drawer: DripDrawer(),
       backgroundColor: Theme.of(context).backgroundColor,
+      floatingActionButton: floatingActionButton,
       body: Padding(
         padding: EdgeInsets.all(10),
         child: this.child,

@@ -42,7 +42,8 @@ class DripHeader extends StatelessWidget {
                   Flexible(child:Text(subHeader, style: AppTheme.subHeaderTextStyle))
                 ],
               )
-            )
+            ),
+          Divider()
         ],
       )
     );

@@ -2,7 +2,15 @@
 
 ## 1.1.0 (not complete)
 
+### Important
+
+> *NOTE:* The scope of the project has slightly changed. MediaDrip -- on top of downloading and modifying media -- will now aggregate media. This means MediaDrip can be your all-in-one application for playing/reading/listening, downloading, and modifying media. **Not all of these features will be available for v1.1.0 release.**
+
 ### New features
+
+* Browse
+
+    * Browse files and folders, allowing you to rename and delete files.
 
 * Web feed
 
@@ -14,13 +22,33 @@
 
     * A setting was implemented to house a maximum number of feed entries. The oldest entries are removed based on this setting. The default setting is 30.
 
-    * Clicking on an entry will take the user to the browse view which displays the entry's thumbnail, title, date, and description. A save button at the bottom right of the screen saves the media.
+    * A setting was implemented to manage feeds. Users can add a new feed or delete an old one. Until a crossplatform database solution is available, editing a feed will not be implemented.
 
-* Settings layout updated
+    * Clicking on an entry will take the user to the browse view which displays the entry's thumbnail, title, date, and description. A save button at the bottom right of the screen saves the media, if the media can be saved.
+
+* Tools
+
+    * Users can now modify media but with limited features.
+
+    * Convert vid -> gif and vice versa.
+
+    * Trim media from point A to B.
+
+* Settings layout updated.
+
+* Dark/light mode theme changer implemented.
 
 ### Fixes
 
 * Refactored views because I wasn't happy with the ViewManagerService. I may revisit it some day but for now things are manually written out.
+
+* Application title updated on Windows.
+
+### To do
+
+* Provide status functionality to services so views can update state when services are running.
+
+* Test mobile devices and macOS.
 
 ## 1.0.1 (June 16, 2020)
 

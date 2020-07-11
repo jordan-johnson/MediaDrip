@@ -35,6 +35,7 @@ dependencies:
       ref: 79d73d3
   http: ^0.12.1
   xml: ^4.2.0
+  html: ^0.14.0+3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

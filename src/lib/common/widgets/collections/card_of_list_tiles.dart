@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class DripListItemCollection extends StatelessWidget {
-  final String header;
+class CardOfListTiles extends StatelessWidget {
+  final String title;
   final IconData icon;
   final List<Widget> children;
 
-  const DripListItemCollection({
-    Key key,
-    this.header,
+  CardOfListTiles({
+    this.title,
     this.icon,
     this.children
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +25,8 @@ class DripListItemCollection extends StatelessWidget {
                 size: 32
               ),
               title: Text(
-                this.header,
-                style: Theme.of(context).textTheme.headline6,
+                this.title,
+                style: Theme.of(context).textTheme.headline5,
               ),
             ),
           ),

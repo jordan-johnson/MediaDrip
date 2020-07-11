@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:mediadrip/common/models/drip_model.dart';
+import 'package:mediadrip/common/models/feed/index.dart';
 import 'package:mediadrip/common/models/feed_source_model.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/download_service.dart';
@@ -37,11 +38,9 @@ class FeedService {
   /// These entries will then be further sorted into [today], [yesterday], 
   /// [thisWeek], [thisMonth], and [older].
   List<DripModel> _entries = List<DripModel>();
-  List<DripModel> today = List<DripModel>();
-  List<DripModel> yesterday = List<DripModel>();
-  List<DripModel> thisWeek = List<DripModel>();
-  List<DripModel> thisMonth = List<DripModel>();
-  List<DripModel> older = List<DripModel>();
+
+  /// Results from [_sortEntriesByDate] after [load] has been called.
+  FeedResultsModel results = FeedResultsModel();
 
   /// Feed service is used in downloading web feeds and sorting them into 
   /// dates i.e. [today], [yesterday], [thisWeek], etc.
@@ -69,8 +68,11 @@ class FeedService {
   Future<void> load() async {
     var fileExists = await _pathService.fileExistsInDirectory(_feedListFileName, _configDirectory);
 
-    if(!fileExists)
-      return await _pathService.createFileInDirectory(_feedListFileName, '', _configDirectory);
+    if(!fileExists) {
+      await _pathService.createFileInDirectory(_feedListFileName, '', _configDirectory);
+
+      return;
+    }
 
     var file = await _pathService.getFileInDirectory(_feedListFileName, _configDirectory);
     var readLines = await file.readAsLines();
@@ -98,6 +100,12 @@ class FeedService {
     _sources.add(source);
   }
 
+  /// Returns list of [FeedSourceModel], found in [_sources].
+  List<FeedSourceModel> getSources() {
+    return _sources;
+  }
+
+  /// Retrieves contents from feed file and returns a map of the name and address.
   Future<Map<String, String>> getFeedsFromConfig() async {
     Map<String, String> feeds = Map<String, String>();
 
@@ -119,6 +127,53 @@ class FeedService {
     }
 
     return feeds;
+  }
+
+  Future<String> getInterpretedAddress(String address) async {
+    var sourceLookup = getSourceByAddressLookup(address);
+
+    if(sourceLookup != null) {
+      var interpreted = await sourceLookup.interpret(address);
+
+      if(interpreted != null) {
+        return interpreted;
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> writeFeedsToConfig(Map<String, String> feeds) async {
+    String contents = '';
+
+    for(var feed in feeds.entries) {
+      var interpreted = await getInterpretedAddress(feed.value);
+
+      if(interpreted != null) {
+        // comma separated with a new line
+        contents += '${feed.key},$interpreted\n';
+      }
+    }
+
+    await _pathService.createFileInDirectory(_feedListFileName, contents, _configDirectory);
+  }
+
+  /// Get a feed source by checking if the [address] contains 
+  /// the base URL.
+  /// 
+  /// For example, a Youtube source will use youtube.com as the 
+  /// sourceAddress property. The [address] parameter in this 
+  /// is checked if it contains youtube.com
+  FeedSourceModel getSourceByAddressLookup(String address) {
+    for(var source in _sources) {
+      for(var lookup in source.lookupAddresses) {
+        if(address.contains(lookup)) {
+          return source;
+        }
+      }
+    }
+
+    return null;
   }
 
   /// Map the feeds by name of the feed and its address.
@@ -148,14 +203,10 @@ class FeedService {
   Future<void> _downloadFeeds() async {
     // clear the entries in case the feed is being refreshed...
     _entries.clear();
-    today.clear();
-    yesterday.clear();
-    thisWeek.clear();
-    thisMonth.clear();
-    older.clear();
+    results.clearAll();
 
     for(var feed in feeds.entries) {
-      var source = _getSourceByAddressLookup(feed.value);
+      var source = getSourceByAddressLookup(feed.value);
 
       if(source != null) {
         var content = await _downloadService.getResponseBodyAsString(feed.value);
@@ -193,34 +244,16 @@ class FeedService {
       var published = DateTime(entry.dateTime.year, entry.dateTime.month, entry.dateTime.day);
 
       if(DateTimeHelper.isToday(published)) {
-        today.add(entry);
+        results.today.add(entry);
       } else if(DateTimeHelper.isYesterday(published)) {
-        yesterday.add(entry);
+        results.yesterday.add(entry);
       } else if(DateTimeHelper.isWithinDaysFromNow(published, 2, 7)) {
-        thisWeek.add(entry);
+        results.thisWeek.add(entry);
       } else if(DateTimeHelper.isWithinDaysFromNow(published, 2, 30)) {
-        thisMonth.add(entry);
+        results.thisMonth.add(entry);
       } else {
-        older.add(entry);
+        results.older.add(entry);
       }
     }
-  }
-
-  /// Get a feed source by checking if the [address] contains 
-  /// the base URL.
-  /// 
-  /// For example, a Youtube source will use youtube.com as the 
-  /// sourceAddress property. The [address] parameter in this 
-  /// is checked if it contains youtube.com
-  FeedSourceModel _getSourceByAddressLookup(String address) {
-    for(var source in _sources) {
-      for(var lookup in source.lookupAddresses) {
-        if(address.contains(lookup)) {
-          return source;
-        }
-      }
-    }
-
-    return null;
   }
 }
