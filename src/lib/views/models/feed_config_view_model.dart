@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mediadrip/common/models/feed_source_model.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/views/models/view_model.dart';
+import 'package:mediadrip/common/models/feed/index.dart';
 
 class FeedConfigViewModel extends ViewModel {
   final FeedService _feedService = locator<FeedService>();

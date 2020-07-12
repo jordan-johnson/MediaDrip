@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DripAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ApplicationBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String route;
 
@@ -9,7 +9,7 @@ class DripAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  DripAppBar({
+  ApplicationBar({
     Key key,
     @required this.title,
     @required this.route

@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/common/models/feed/index.dart';
-import 'package:mediadrip/common/models/feed_source_model.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/download_service.dart';
 import 'package:mediadrip/services/path_service.dart';
@@ -129,6 +128,10 @@ class FeedService {
     return feeds;
   }
 
+  /// Does a source lookup based on [address] and returns the 
+  /// interpreted address.
+  /// 
+  /// Refer to [FeedSourceModel] for more information.
   Future<String> getInterpretedAddress(String address) async {
     var sourceLookup = getSourceByAddressLookup(address);
 
@@ -143,6 +146,13 @@ class FeedService {
     return null;
   }
 
+  /// Saves a map of feeds (name, address) to file, [_feedListFileName],
+  /// located in [_configDirectory].
+  /// 
+  /// File is always overwritten.
+  /// 
+  /// Once a cross-platform database solution is available, this will 
+  /// be rewritten.
   Future<void> writeFeedsToConfig(Map<String, String> feeds) async {
     String contents = '';
 

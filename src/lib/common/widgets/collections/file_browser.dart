@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/models/drip_picker_model.dart';
+import 'package:mediadrip/common/models/filebrowser/index.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:provider/provider.dart';
 
-class DripPicker extends StatelessWidget {
-
-  DripPicker() {
+class FileBrowser extends StatelessWidget {
+  FileBrowser() {
     _initialize();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DripPickerModel>(
-      create: (_) => DripPickerModel(),
-      child: Consumer<DripPickerModel>(
+    return ChangeNotifierProvider<FileBrowserModel>(
+      create: (_) => FileBrowserModel(),
+      child: Consumer<FileBrowserModel>(
         builder: (_, model, __) {
           // keep working on this to get files in directory
           return FutureBuilder<List<FileEntity>>(
@@ -38,18 +37,6 @@ class DripPicker extends StatelessWidget {
                       );
                     }
                   );
-                  // return GridView.count(
-                  //   crossAxisCount: 2,
-                  //   shrinkWrap: true,
-                  //   children: List.generate(entities.length, (index) {
-                  //     return SizedBox(
-                  //       height: 200,
-                  //       child: Card(
-                  //         child: Text(entities[index].path),
-                  //       ),
-                  //     );
-                  //   })
-                  // );
                 }
               } else {
                 print('not done');

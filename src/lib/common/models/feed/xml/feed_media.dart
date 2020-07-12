@@ -1,5 +1,4 @@
-import 'package:mediadrip/services/feed/models/feed_thumbnail.dart';
-import 'package:mediadrip/services/feed/helper.dart';
+import 'package:mediadrip/common/models/feed/xml/index.dart';
 import 'package:xml/xml.dart';
 
 class FeedMedia {

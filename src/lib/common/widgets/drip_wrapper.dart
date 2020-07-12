@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/widgets/drawer/drip_drawer.dart';
-import 'package:mediadrip/common/widgets/drip_app_bar.dart';
+import 'package:mediadrip/common/widgets/navigation/index.dart';
 
 class DripWrapper extends StatelessWidget {
   final String title;
@@ -19,8 +18,8 @@ class DripWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DripAppBar(title: this.title, route: this.route),
-      drawer: DripDrawer(),
+      appBar: ApplicationBar(title: this.title, route: this.route),
+      drawer: NavigationDrawer(),
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: floatingActionButton,
       body: Padding(

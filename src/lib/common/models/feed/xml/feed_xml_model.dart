@@ -1,17 +1,16 @@
-import 'package:mediadrip/services/feed/models/feed_entry.dart';
-import 'package:mediadrip/services/feed/helper.dart';
+import 'package:mediadrip/common/models/feed/xml/index.dart';
 import 'package:xml/xml.dart';
 
-class FeedModel {
+class FeedXmlModel {
   final String title;
   final List<FeedEntry> entries;
 
-  FeedModel({
+  FeedXmlModel({
     this.title,
     this.entries
   });
   
-  factory FeedModel.parse(String xmlString) {
+  factory FeedXmlModel.parse(String xmlString) {
     var document = XmlDocument.parse(xmlString);
     XmlElement feedElement;
 
@@ -21,7 +20,7 @@ class FeedModel {
       throw new ArgumentError('Feed not found in document.');
     }
 
-    return FeedModel(
+    return FeedXmlModel(
       title: findElementOrNull(feedElement, 'title').text,
       entries: feedElement.findElements('entry').map((element) {
         return FeedEntry.parse(element);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/widgets/drip_picker.dart';
 import 'package:mediadrip/common/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/routes.dart';
 
@@ -13,7 +12,7 @@ class ToolsView extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: DripPicker()
+            child: Text('ok')
           ),
           Expanded(
             child: Text('hello'),

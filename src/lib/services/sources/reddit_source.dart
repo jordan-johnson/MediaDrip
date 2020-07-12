@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'package:mediadrip/common/models/download_instructions_model.dart';
-import 'package:mediadrip/common/models/drip_model.dart';
-import 'package:mediadrip/services/sources/base_source.dart';
-import 'package:mediadrip/services/sources/models/reddit_json_model.dart';
-import 'package:mediadrip/utilities/date_time_helper.dart';
+import 'package:mediadrip/common/models/feed/json/index.dart';
+import 'package:mediadrip/common/models/index.dart';
+import 'package:mediadrip/services/sources/index.dart';
+import 'package:mediadrip/utilities/index.dart';
 
 class RedditSource extends BaseSource {
   @override

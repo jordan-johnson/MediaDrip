@@ -1,4 +1,4 @@
-import 'package:mediadrip/services/feed/helper.dart';
+import 'package:mediadrip/common/models/feed/xml/index.dart';
 import 'package:xml/xml.dart';
 
 class FeedAuthor {

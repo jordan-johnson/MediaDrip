@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
-import 'package:mediadrip/common/models/download_instructions_model.dart';
-import 'package:mediadrip/common/models/drip_model.dart';
-import 'package:mediadrip/services/feed/models/feed_model.dart';
-import 'package:mediadrip/services/sources/base_source.dart';
+import 'package:mediadrip/common/models/download/index.dart';
+import 'package:mediadrip/common/models/index.dart';
+import 'package:mediadrip/common/models/feed/xml/index.dart';
+import 'package:mediadrip/services/sources/index.dart';
 
 class YoutubeSource extends BaseSource {
   @override
@@ -55,7 +55,7 @@ class YoutubeSource extends BaseSource {
 
   @override
   Future<List<DripModel>> parse(String content) async {
-    var xml = FeedModel.parse(content);
+    var xml = FeedXmlModel.parse(content);
     var drips = List<DripModel>();
 
     for(var entry in xml.entries) {

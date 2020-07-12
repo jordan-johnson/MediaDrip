@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/index.dart';
 
-class DripPickerModel extends ChangeNotifier {
+class FileBrowserModel extends ChangeNotifier {
   final PathService _pathService = locator<PathService>();
 
   Future<List<FileEntity>> getFiles() async {
