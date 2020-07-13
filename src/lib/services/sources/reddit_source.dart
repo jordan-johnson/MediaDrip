@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:mediadrip/common/models/feed/json/index.dart';
-import 'package:mediadrip/common/models/index.dart';
+import 'package:mediadrip/models/feed/json/reddit_json.dart';
+import 'package:mediadrip/models/file/download_instructions.dart';
+import 'package:mediadrip/models/file/drip.dart';
 import 'package:mediadrip/services/sources/index.dart';
 import 'package:mediadrip/utilities/index.dart';
 
@@ -17,7 +18,7 @@ class RedditSource extends BaseSource {
   ];
 
   @override
-  DownloadInstructionsModel configureDownload(DripModel drip) {
+  DownloadInstructions configureDownload(Drip drip) {
     String address;
 
     switch(drip.type) {
@@ -31,7 +32,7 @@ class RedditSource extends BaseSource {
       break;
     }
 
-    return DownloadInstructionsModel(info: drip.title, type: drip.type, address: address);
+    return DownloadInstructions(fileName: drip.title, type: drip.type, address: address);
   }
 
   @override
@@ -56,14 +57,14 @@ class RedditSource extends BaseSource {
   }
 
   @override
-  Future<List<DripModel>> parse(String content) async {
+  Future<List<Drip>> parse(String content) async {
     var json = jsonDecode(content);
-    var redditModel = RedditJsonModel.fromJson(json);
-    var drips = List<DripModel>();
+    var redditModel = RedditJson.fromJson(json);
+    var drips = List<Drip>();
 
     if(redditModel != null) {
       for(var entry in redditModel.data) {
-        var drip = DripModel(
+        var drip = Drip(
           type: _getType(entry),
           link: entry.url,
           isDownloadableLink: !entry.isSelfText,
@@ -82,7 +83,7 @@ class RedditSource extends BaseSource {
     return drips;
   }
 
-  DripType _getType(RedditJsonDataModel data) {
+  DripType _getType(RedditJsonThreadData data) {
     if(data.isSelfText)
       return DripType.unset;
     

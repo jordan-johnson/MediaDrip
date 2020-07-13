@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:mediadrip/common/models/download/index.dart';
-import 'package:mediadrip/common/models/drip_model.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/models/file/download_instructions.dart';
+import 'package:mediadrip/models/file/drip.dart';
+import 'package:mediadrip/models/source/download_source.dart';
 import 'package:mediadrip/services/path_service.dart';
 
 class DownloadService {
@@ -28,7 +29,7 @@ class DownloadService {
 
   /// Sources stored that will return [DownloadInstructionsModel] when an address matches 
   /// one of the lookup addresses.
-  List<DownloadSourceModel> _sources = List<DownloadSourceModel>();
+  List<DownloadSource> _sources = List<DownloadSource>();
 
   /// Checks if the youtube-dl configuration exists. If it doesn't exist, one will be 
   /// created from the template found in assets.
@@ -53,7 +54,7 @@ class DownloadService {
   /// Adds a source to the service. Source MUST extend [DownloadSourceModel].
   /// 
   /// If the lookupAddresses property isn't set, an exception will be thrown.
-  void addSource<T extends DownloadSourceModel>(T source) {
+  void addSource<T extends DownloadSource>(T source) {
     if(source.lookupAddresses == null) {
       throw Exception('Lookup addresses cannot be empty.');
     }
@@ -104,7 +105,7 @@ class DownloadService {
   /// [DripModel.image] is a video thumbnail and the video is what we need to download, 
   /// or we need to reroute a given [DripModel.link] that is 
   /// https://imgur.com/imagePage to https://i.imgur.com/image.jpg
-  Future<void> dripToDisk(DripModel drip) async {
+  Future<void> dripToDisk(Drip drip) async {
     if(!drip.isDownloadableLink || drip.type == DripType.unset)
       return;
 
@@ -119,7 +120,7 @@ class DownloadService {
 
   /// Provides instructions to [_executeInstructions] to try downloading via Youtube-DL.
   Future<void> downloadUsingYoutubeDownloader(String address) async {
-    var instructions = DownloadInstructionsModel(address: address, type: DripType.unset, info: null);
+    var instructions = DownloadInstructions(address: address, type: DripType.unset, fileName: null);
 
     await _executeInstructions(instructions);
   }
@@ -146,7 +147,7 @@ class DownloadService {
   /// Loops through [_sources] to see if our [address] contains a lookup address.
   /// 
   /// If source is found, return it. Otherwise, return null.
-  DownloadSourceModel _getSourceByAddressLookup(String address) {
+  DownloadSource _getSourceByAddressLookup(String address) {
     for(var source in _sources) {
       for(var lookup in source.lookupAddresses) {
         if(address.contains(lookup)) {
@@ -182,13 +183,13 @@ class DownloadService {
   ///     .listen((data) => print(data));
   /// });
   /// ```
-  Future<void> _executeInstructions(DownloadInstructionsModel instructions) async {
+  Future<void> _executeInstructions(DownloadInstructions instructions) async {
     await initialize();
 
     switch(instructions.type) {
       case DripType.image:
         var fileExtension = _pathService.getExtensionFromFileName(instructions.address);
-        var fileName = '${instructions.info}.$fileExtension';
+        var fileName = '${instructions.fileName}.$fileExtension';
         var bytes = await getResponseBodyAsBytes(instructions.address);
 
         await _pathService.createFileInDirectoryFromBytes(fileName, bytes, AvailableDirectories.downloads);

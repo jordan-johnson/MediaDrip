@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/common/models/settings_model.dart';
-import 'package:mediadrip/common/theme.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/models/file/settings.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/sources.dart';
+import 'package:mediadrip/ui/theme/theme.dart';
 import 'package:mediadrip/utilities/routes.dart';
 import 'package:provider/provider.dart';
 
@@ -27,14 +27,14 @@ class MediaDrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _settingsService.load(),
-      builder: (BuildContext context, AsyncSnapshot<SettingsModel> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<Settings> snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
           if(snapshot.hasData) {
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider.value(value: snapshot.data)
               ],
-              child: Consumer<SettingsModel>(
+              child: Consumer<Settings>(
                 builder: (_, model, __) {
                   return MaterialApp(
                     title: this.title,

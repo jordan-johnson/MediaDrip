@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/models/source/download_source.dart';
+import 'package:mediadrip/models/source/feed_source.dart';
 import 'package:mediadrip/services/settings_service.dart';
-import 'package:mediadrip/common/models/index.dart';
 
-abstract class BaseSource implements FeedSourceModel, DownloadSourceModel {
+abstract class BaseSource implements FeedSource, DownloadSource {
   @protected
   SettingsService settingsService = locator<SettingsService>();
 

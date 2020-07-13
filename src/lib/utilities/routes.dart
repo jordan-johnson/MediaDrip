@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mediadrip/views/feed_configuration_view.dart';
-import 'package:mediadrip/views/index.dart';
-import 'package:mediadrip/views/youtube_configuration_view.dart';
+import 'package:mediadrip/ui/widgets/views/index.dart';
 
 class Routes {
   static const home = '/';
@@ -24,7 +22,7 @@ class Routes {
       case browse:
         if(args != null && args.containsKey('view')) {
           return _route(
-            builder: BrowseView(item: args['view']),
+            builder: BrowseView(drip: args['view']),
             settings: routeSettings
           );
         }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:mediadrip/common/models/settings_model.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/models/file/settings.dart';
 import 'package:mediadrip/services/path_service.dart';
 
 class SettingsService {
@@ -24,9 +24,9 @@ class SettingsService {
 
   /// The model for our application. Values are encoded and decoded here.
   /// 
-  /// The [SettingsModel] extends `ChangeNotifier`, notifying `Consumer`s of changes to 
+  /// The [Settings] extends `ChangeNotifier`, notifying `Consumer`s of changes to 
   /// the model.
-  SettingsModel data;
+  Settings data;
 
   /// [SettingsService] provides functionality for storing application settings for later use.
   SettingsService();
@@ -35,7 +35,7 @@ class SettingsService {
   /// 
   /// If the settings file does not exist, one will be created based on the template found in 
   /// the assets folder.
-  Future<SettingsModel> load() async {
+  Future<Settings> load() async {
     String contents;
 
     var fileExists = await _path.fileExistsInDirectory(_settingsFileName, _settingsDirectoryEnum);
@@ -64,15 +64,15 @@ class SettingsService {
     await _path.createFileInDirectory(_settingsFileName, encoded, _settingsDirectoryEnum);
   }
 
-  /// Decodes the provided [contents] and saves the [SettingsModel] in our [data] property.
+  /// Decodes the provided [contents] and saves the [Settings] in our [data] property.
   void _decodeContents(String contents) {
     Map<String, dynamic> decoded = jsonDecode(contents);
 
-    data = SettingsModel.fromJson(decoded);
+    data = Settings.fromJson(decoded);
   }
 
   /// This method is used on creation of our settings file to write the initial paths for 
-  /// our [SettingsModel], such as [SettingsModel.applicationStorage].
+  /// our [Settings], such as [SettingsModel.applicationStorage].
   /// 
   /// Simply put, the settings file template needs information about the paths for our 
   /// current device.

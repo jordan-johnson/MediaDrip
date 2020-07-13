@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
-import 'package:mediadrip/common/models/download/index.dart';
-import 'package:mediadrip/common/models/index.dart';
-import 'package:mediadrip/common/models/feed/xml/index.dart';
+import 'package:mediadrip/models/feed/xml/feed_xml.dart';
+import 'package:mediadrip/models/file/download_instructions.dart';
+import 'package:mediadrip/models/file/drip.dart';
 import 'package:mediadrip/services/sources/index.dart';
 
 class YoutubeSource extends BaseSource {
@@ -15,8 +15,8 @@ class YoutubeSource extends BaseSource {
   ];
 
   @override
-  DownloadInstructionsModel configureDownload(DripModel drip) {
-    return DownloadInstructionsModel(info: drip.title, type: drip.type, address: drip.link);
+  DownloadInstructions configureDownload(Drip drip) {
+    return DownloadInstructions(fileName: drip.title, type: drip.type, address: drip.link);
   }
 
   @override
@@ -54,12 +54,12 @@ class YoutubeSource extends BaseSource {
   }
 
   @override
-  Future<List<DripModel>> parse(String content) async {
-    var xml = FeedXmlModel.parse(content);
-    var drips = List<DripModel>();
+  Future<List<Drip>> parse(String content) async {
+    var xml = FeedXml.parse(content);
+    var drips = List<Drip>();
 
     for(var entry in xml.entries) {
-      var drip = DripModel(
+      var drip = Drip(
         type: DripType.video,
         link: entry.link,
         isDownloadableLink: true,
@@ -67,8 +67,8 @@ class YoutubeSource extends BaseSource {
         author: entry.author.name,
         description: entry.media.description,
         dateTime: entry.published,
-        thumbnail: entry.media.thumbnail.url,
-        image: entry.media.thumbnail.url
+        thumbnail: entry.media.thumbnail,
+        image: entry.media.thumbnail
       );
 
       drips.add(drip);

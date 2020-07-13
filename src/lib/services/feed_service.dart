@@ -1,7 +1,8 @@
 import 'dart:core';
-import 'package:mediadrip/common/models/drip_model.dart';
-import 'package:mediadrip/common/models/feed/index.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/models/feed/feed_results.dart';
+import 'package:mediadrip/models/file/drip.dart';
+import 'package:mediadrip/models/source/feed_source.dart';
 import 'package:mediadrip/services/download_service.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:mediadrip/services/settings_service.dart';
@@ -25,9 +26,9 @@ class FeedService {
   /// feed file.
   final AvailableDirectories _configDirectory = AvailableDirectories.configuration;
 
-  /// List of [FeedSourceModel] for correctly parsing the web content 
-  /// via [FeedSourceModel.parse].
-  List<FeedSourceModel> _sources = List<FeedSourceModel>();
+  /// List of [FeedSource] for correctly parsing the web content 
+  /// via [FeedSource.parse].
+  List<FeedSource> _sources = List<FeedSource>();
 
   /// Complete list of feeds that are mapped by name and web feed address.
   Map<String, String> feeds = Map<String, String>();
@@ -36,10 +37,10 @@ class FeedService {
   /// 
   /// These entries will then be further sorted into [today], [yesterday], 
   /// [thisWeek], [thisMonth], and [older].
-  List<DripModel> _entries = List<DripModel>();
+  List<Drip> _entries = List<Drip>();
 
   /// Results from [_sortEntriesByDate] after [load] has been called.
-  FeedResultsModel results = FeedResultsModel();
+  FeedResults results = FeedResults();
 
   /// Feed service is used in downloading web feeds and sorting them into 
   /// dates i.e. [today], [yesterday], [thisWeek], etc.
@@ -91,7 +92,7 @@ class FeedService {
 
   /// Adds a source to the collection for later use in 
   /// parsing web feeds.
-  void addSource<T extends FeedSourceModel>(T source) {
+  void addSource<T extends FeedSource>(T source) {
     if(source.lookupAddresses == null) {
       throw Exception('Source address cannot be empty!');
     }
@@ -99,8 +100,8 @@ class FeedService {
     _sources.add(source);
   }
 
-  /// Returns list of [FeedSourceModel], found in [_sources].
-  List<FeedSourceModel> getSources() {
+  /// Returns list of [FeedSource], found in [_sources].
+  List<FeedSource> getSources() {
     return _sources;
   }
 
@@ -174,7 +175,7 @@ class FeedService {
   /// For example, a Youtube source will use youtube.com as the 
   /// sourceAddress property. The [address] parameter in this 
   /// is checked if it contains youtube.com
-  FeedSourceModel getSourceByAddressLookup(String address) {
+  FeedSource getSourceByAddressLookup(String address) {
     for(var source in _sources) {
       for(var lookup in source.lookupAddresses) {
         if(address.contains(lookup)) {
