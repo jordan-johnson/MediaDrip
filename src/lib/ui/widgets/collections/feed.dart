@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mediadrip/models/feed/feed_results.dart';
 import 'package:mediadrip/models/feed/ifeed_item.dart';
@@ -5,8 +6,10 @@ import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/drip_header.dart';
 
 class _FeedModel extends WidgetModel {
-  final Future<FeedResults> future;
+  final Future<FeedResults> Function() future;
   final Widget Function(BuildContext context, IFeedItem entry) itemBuilder;
+
+  Future<FeedResults> Function() test;
 
   FeedResults results = FeedResults();
 
@@ -21,13 +24,10 @@ class _FeedModel extends WidgetModel {
 
   @override
   Future<void> initialize() async {
-    await refresh();
-  }
-
-  Future<void> refresh() async {
     isLoading = true;
 
-    results = await this.future;
+    results.clearAll();
+    results = await this.future();
 
     isLoading = false;
   }
@@ -40,7 +40,7 @@ class _FeedModel extends WidgetModel {
 }
 
 class Feed<T extends IFeedItem> extends StatelessWidget {
-  final Future<FeedResults> future;
+  final Future<FeedResults> Function() future;
   final Widget Function(BuildContext context, IFeedItem item) itemBuilder;
 
   /// Creates a date-based feed.
@@ -59,7 +59,7 @@ class Feed<T extends IFeedItem> extends StatelessWidget {
         return (model.isLoading) ? 
           Center(child: CircularProgressIndicator()) :
           RefreshIndicator(
-            onRefresh: () => model.refresh(),
+            onRefresh: () => model.initialize(),
             child: ListView(
               children: _propagateFeed(context, model.results),
             )

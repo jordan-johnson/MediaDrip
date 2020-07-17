@@ -66,6 +66,7 @@ class FeedService {
   /// 
   /// This method can be used to refresh the feed.
   Future<void> load() async {
+    print('load');
     var fileExists = await _pathService.fileExistsInDirectory(_feedListFileName, _configDirectory);
 
     if(!fileExists) {

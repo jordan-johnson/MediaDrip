@@ -11,7 +11,7 @@ class ToolsView extends StatelessWidget {
       route: Routes.tools,
       child: Row(
         children: [
-          Expanded(child: FileBrowser()),
+          Expanded(child: FileBrowser(viewType: FileBrowserViewType.grid)),
           Expanded(child: Text('hello'))
         ],
       ),

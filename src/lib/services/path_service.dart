@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:mediadrip/models/file/index.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Used in services to restrict access to the available directories.
@@ -14,36 +15,6 @@ enum AvailableDirectories {
   root,
   configuration,
   downloads 
-}
-
-enum FileEntityType {
-  folder,
-  file,
-  link
-}
-
-class FileEntity {
-  String name;
-  String path;
-  FileEntityType type;
-
-  FileEntity({FileSystemEntity entity}) {
-    this.path = entity.path.replaceAll('\\', '/');
-    this.name = this.path.split('/').last;
-    
-    switch(entity.runtimeType) {
-      case Directory:
-        this.type = FileEntityType.folder;
-      break;
-      case Link:
-        this.type = FileEntityType.link;
-      break;
-      case File:
-      default:
-        this.type = FileEntityType.file;
-      break;
-    }
-  }
 }
 
 /// Used in retrieving and saving files, as well as providing platform-agnostic paths to specified directories 
@@ -153,17 +124,17 @@ class PathService {
   }
 
   /// Returns a list of all files in 
-  Future<List<FileEntity>> getAllFilesInDirectory(AvailableDirectories directory) async {
+  Future<StructuredFileEntities> getAllFilesInDirectory(AvailableDirectories directory) async {
     var finalizedDirectory = await convertDirectoryEnumToPath(directory);
-    var files = List<FileEntity>();
-    var completer = Completer<List<FileEntity>>();
+    var structuredEntities = StructuredFileEntities();
+    var completer = Completer<StructuredFileEntities>();
     var listing = Directory(finalizedDirectory).list(recursive: true);
 
     listing.listen((item) {
       var entity = FileEntity(entity: item);
 
-      files.add(entity);
-    }, onDone: () => completer.complete(files));
+      structuredEntities.add(entity);
+    }, onDone: () => completer.complete(structuredEntities));
 
     return completer.future;
   }

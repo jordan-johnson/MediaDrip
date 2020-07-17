@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/models/feed/feed_results.dart';
@@ -31,7 +33,8 @@ class HomeView extends StatelessWidget {
           title: 'MediaDrip',
           route: Routes.home,
           child: Feed(
-            future: model.getFeed(),
+            // this isn't being called on refresh?
+            future: () => model.getFeed(),
             itemBuilder: (ctx, item) {
               return ListTile(
                 leading: SizedBox(
