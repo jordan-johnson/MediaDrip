@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const testt = Color(0xFFFFFFFF);
+const testt = Color(0xFF000000);
 
 class AppTheme {
   static final TextStyle headerTextStyle = TextStyle(

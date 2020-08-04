@@ -26,7 +26,7 @@ class CardOfListTiles extends StatelessWidget {
               ),
               title: Text(
                 this.title,
-                style: Theme.of(context).textTheme.headline5,
+                style: TextStyle(color: Colors.white)
               ),
             ),
           ),
