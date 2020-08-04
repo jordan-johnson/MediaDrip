@@ -41,7 +41,7 @@ class SettingsService {
     var fileExists = await _path.fileExistsInDirectory(_settingsFileName, _settingsDirectoryEnum);
 
     if(fileExists) {
-      var file = await _path.getFileInDirectory(_settingsFileName, _settingsDirectoryEnum);
+      var file = await _path.getFileFromFileName(_settingsFileName, _settingsDirectoryEnum);
 
       contents = await file.readAsString();
     } else {

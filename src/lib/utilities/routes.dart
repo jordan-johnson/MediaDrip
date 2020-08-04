@@ -53,6 +53,13 @@ class Routes {
           settings: routeSettings
         );
       case tools:
+        if(args != null && args.containsKey('view')) {
+          return _route(
+            builder: ToolsView(folder: args['view']),
+            settings: routeSettings
+          );
+        }
+        
         return _route(
           builder: ToolsView(),
           settings: routeSettings

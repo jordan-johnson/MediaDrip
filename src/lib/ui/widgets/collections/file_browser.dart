@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/file/file_entity.dart';
+import 'package:mediadrip/models/file/folder_item.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
-import 'package:mediadrip/ui/widgets/collections/index.dart';
+import 'package:mediadrip/utilities/file_helper.dart';
 
 enum FileBrowserViewType {
   grid,
@@ -14,23 +14,23 @@ enum FileBrowserViewType {
 class _FileBrowserModel extends WidgetModel {
   final PathService _pathService = locator<PathService>();
 
-  StructuredFileEntities _files;
-  StructuredFileEntities get files => _files;
+  String _currentFolderPath;
+
+  FolderItem currentFolder;
 
   FileBrowserViewType viewType;
 
-  _FileBrowserModel({@required this.viewType}) {
-    getFiles();
+  _FileBrowserModel({@required this.viewType});
+
+  Future<FolderItem> getFolder() async {
+    _currentFolderPath ??= await _pathService.convertDirectoryEnumToPath(AvailableDirectories.downloads);
+    currentFolder = await FileHelper.buildFolderContentsFromPath(_currentFolderPath);
+
+    return currentFolder;
   }
 
-  Future<StructuredFileEntities> getFiles() async {
-    files = await _pathService.getAllFilesInDirectory(AvailableDirectories.downloads);
-
-    return files;
-  }
-
-  set files(StructuredFileEntities value) {
-    _files = value;
+  Future<void> updateCurrentFolder(String path) async {
+    _currentFolderPath = path;
 
     notifyListeners();
   }
@@ -52,67 +52,82 @@ class FileBrowser extends StatelessWidget {
     return WidgetProvider<_FileBrowserModel>(
       model: _FileBrowserModel(viewType: this.viewType),
       builder: (model) {
-        return FutureBuilder<StructuredFileEntities>(
-          future: model.getFiles(),
-          builder: (BuildContext context, AsyncSnapshot<StructuredFileEntities> snapshot) {
+        return FutureBuilder<FolderItem>(
+          future: model.getFolder(),
+          builder: (BuildContext context, AsyncSnapshot<FolderItem> snapshot) {
             if(snapshot.connectionState == ConnectionState.done) {
               if(snapshot.hasData) {
                 var entities = snapshot.data;
-                var tiles = List<ListTile>();
+                var folderTiles = List<ListTile>();
+                var fileTiles = List<ListTile>();
 
-                // for(var folder in entities.folders) {
-                //   var tile = ListTile(
-                //     leading: Icon(
-                //       Icons.folder,
-                //       color: Colors.yellow[200],
-                //       size: 32
-                //     ),
-                //     title: Text(
-                //       folder.name,
-                //       style: Theme.of(context).textTheme.headline5
-                //     )
-                //   );
+                for(var folder in entities.subFolders) {
+                  var tile = ListTile(
+                    leading: Icon(
+                      Icons.folder,
+                      color: Colors.yellow[200],
+                      size: 32
+                    ),
+                    title: Text(
+                      folder.name,
+                      style: Theme.of(context).textTheme.headline5
+                    ),
+                    onTap: () => model.updateCurrentFolder(folder.path),
+                  );
 
-                //   tiles.add(tile);
-                // }
+                  folderTiles.add(tile);
+                }
 
-                // for(var file in entities.files) {
-                //   var tile = ListTile(
-                //     leading: Icon(
-                //       Icons.insert_drive_file,
-                //       color: Colors.yellow[200],
-                //       size: 32
-                //     ),
-                //     title: Text(
-                //       file.name,
-                //       style: Theme.of(context).textTheme.headline5
-                //     )
-                //   );
+                for(var file in entities.files) {
+                  var tile = ListTile(
+                    leading: Icon(
+                      FileHelper.getIconFromFileName(file.name),
+                      color: Theme.of(context).iconTheme.color,
+                      size: 32
+                    ),
+                    title: Text(
+                      file.name,
+                      style: Theme.of(context).textTheme.headline5
+                    ),
+                    subtitle: Text(
+                      '${file.sizeConversion}'
+                    ),
+                  );
 
-                //   tiles.add(tile);
-                // }
+                  fileTiles.add(tile);
+                }
 
-                // return ListView(
-                //   children: [
-                //     for(var tile in tiles)
-                //       tile
-                //   ],
-                // );
-                
-                // return GridView.builder(
-                //   itemCount: entities.length,
-                //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //     crossAxisCount: (MediaQuery.of(context).orientation == Orientation.landscape) ? 3 : 2,
-                //     crossAxisSpacing: 5,
-                //     childAspectRatio: 500 / 300
-                //   ),
-                //   itemBuilder: (_, index) {
-                //     entities.
-                //     return Card(
-                //       child: Text(entities[index].name),
-                //     );
-                //   }
-                // );
+                return ListView(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Folders'),
+                        ListView.separated(
+                          physics: ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          separatorBuilder: (_, __) => Divider(),
+                          itemCount: folderTiles.length,
+                          itemBuilder: (ctx, index) {
+                            return folderTiles[index];
+                          },
+                        ),
+                        Divider(),
+                        Text('Files'),
+                        ListView.separated(
+                          physics: ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          separatorBuilder: (_, __) => Divider(),
+                          itemCount: fileTiles.length,
+                          itemBuilder: (ctx, index) {
+                            return fileTiles[index];
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                );
               }
             } else {
               return Container(height: 60, child: Center(child: CircularProgressIndicator()));

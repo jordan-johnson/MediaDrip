@@ -66,7 +66,6 @@ class FeedService {
   /// 
   /// This method can be used to refresh the feed.
   Future<void> load() async {
-    print('load');
     var fileExists = await _pathService.fileExistsInDirectory(_feedListFileName, _configDirectory);
 
     if(!fileExists) {
@@ -75,7 +74,7 @@ class FeedService {
       return;
     }
 
-    var file = await _pathService.getFileInDirectory(_feedListFileName, _configDirectory);
+    var file = await _pathService.getFileFromFileName(_feedListFileName, _configDirectory);
     var readLines = await file.readAsLines();
 
     // if the file exists but no feeds are entered, we're done
@@ -110,7 +109,7 @@ class FeedService {
   Future<Map<String, String>> getFeedsFromConfig() async {
     Map<String, String> feeds = Map<String, String>();
 
-    var file = await _pathService.getFileInDirectory(_feedListFileName, _configDirectory);
+    var file = await _pathService.getFileFromFileName(_feedListFileName, _configDirectory);
     var lines = await file.readAsLines();
     
     for(var line in lines) {

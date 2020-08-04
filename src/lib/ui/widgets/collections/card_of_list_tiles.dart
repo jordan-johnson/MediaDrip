@@ -17,7 +17,7 @@ class CardOfListTiles extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            color: Colors.purple[50],
+            color: Theme.of(context).primaryColorLight,
             child: ListTile(
               leading: Icon(
                 icon,

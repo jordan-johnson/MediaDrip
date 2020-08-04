@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const testt = Color(0xFFFFFFFF);
+
 class AppTheme {
   static final TextStyle headerTextStyle = TextStyle(
     fontSize: 36,
@@ -18,6 +20,9 @@ class AppTheme {
       accentColor: Colors.purple[400],
       backgroundColor: Colors.white,
       scaffoldBackgroundColor: Colors.white,
+
+      primaryColor: Colors.purple,
+      primaryColorLight: Colors.purple[300],
 
       buttonTheme: ButtonThemeData(
         buttonColor: Colors.purple[600],
@@ -38,6 +43,10 @@ class AppTheme {
           height: 1.5,
           fontSize: 14,
         )
+      ),
+
+      iconTheme: IconThemeData(
+        color: Colors.purple[200]
       )
     );
   }
@@ -51,6 +60,9 @@ class AppTheme {
       accentColor: Colors.purple[400],
       backgroundColor: Colors.grey[900],
       scaffoldBackgroundColor: Colors.grey[900],
+
+      primaryColor: Colors.purple,
+      primaryColorLight: Colors.grey[850],
 
       appBarTheme: AppBarTheme(
         color: Colors.purple
@@ -75,7 +87,11 @@ class AppTheme {
           height: 1.5,
           fontSize: 14,
         )
-      )
+      ),
+
+      iconTheme: IconThemeData(
+        color: Colors.purple[200]
+      ),
     );
   }
 

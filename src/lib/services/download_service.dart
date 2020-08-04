@@ -7,6 +7,7 @@ import 'package:mediadrip/models/file/download_instructions.dart';
 import 'package:mediadrip/models/file/drip.dart';
 import 'package:mediadrip/models/source/download_source.dart';
 import 'package:mediadrip/services/path_service.dart';
+import 'package:mediadrip/utilities/file_helper.dart';
 
 class DownloadService {
   /// Http client used in downloading from web
@@ -47,8 +48,11 @@ class DownloadService {
       await _pathService.createFileInDirectory(_configFileName, getConfigurationAsset, AvailableDirectories.configuration);
     }
 
-    if(_configFullPath.isEmpty)
-      _configFullPath = await _pathService.getPathOfFileInDirectory(_configFileName, AvailableDirectories.configuration);
+    if(_configFullPath.isEmpty) {
+      var file = await _pathService.getFileFromFileName(_configFileName, AvailableDirectories.configuration);
+      
+      _configFullPath = file.path;
+    }
   }
 
   /// Adds a source to the service. Source MUST extend [DownloadSourceModel].
@@ -64,7 +68,7 @@ class DownloadService {
 
   /// Reads content of youtube configuration file.
   Future<String> readContentsOfConfiguration() async {
-    var configFile = await _pathService.getFileInDirectory(_configFileName, AvailableDirectories.configuration);
+    var configFile = await _pathService.getFileFromFileName(_configFileName, AvailableDirectories.configuration);
     var contents = await configFile.readAsString();
 
     return contents;
@@ -188,7 +192,7 @@ class DownloadService {
 
     switch(instructions.type) {
       case DripType.image:
-        var fileExtension = _pathService.getExtensionFromFileName(instructions.address);
+        var fileExtension = FileHelper.getExtensionFromFileName(instructions.address);
         var fileName = '${instructions.fileName}.$fileExtension';
         var bytes = await getResponseBodyAsBytes(instructions.address);
 

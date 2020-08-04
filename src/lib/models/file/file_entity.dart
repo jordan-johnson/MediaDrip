@@ -16,8 +16,6 @@ class StructuredFileEntities {
   final List<FileEntity> folders = List<FileEntity>();
   final List<FileEntity> files = List<FileEntity>();
 
-  int get length => folders.length + files.length;
-
   void add(FileEntity entity) {
     switch(entity.type) {
       case FileSystemEntityType.directory:

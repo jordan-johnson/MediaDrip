@@ -1,13 +1,17 @@
 # MediaDrip
 
-MediaDrip allows you to download, convert, merge, and trim videos and other media.
+MediaDrip is a media aggregator, downloader, and manager. 
 
-## Planned Features
+## Features
 
-* Cross-platform (mobile & desktop)
-* Download media via youtube-dl
-* Manipulate media via ffmpeg
-* Browse and play media
+* Cross-platform (mobile & desktop) using Flutter.
+* Download audio and video with MediaDrip's easy-to-use interface using Youtube-DL, which supports hundreds of sites and has over 700 open source contributors.
+* Supports image downloading from configurable `Source` downloaders.
+* Easily convert, trim, and crop your media with a simple interface for ffmpeg.
+* Aggregate media into a personalized web feed.
+* Organize your web feed with profiles (not yet available).
+* Modify media metadata.
+* Browse and play media (not yet available).
 
 ## Recent Updates (1.0.1 release)
 
