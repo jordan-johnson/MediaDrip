@@ -6,12 +6,16 @@ import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/models/file/download_instructions.dart';
 import 'package:mediadrip/models/file/drip.dart';
 import 'package:mediadrip/models/source/download_source.dart';
+import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/services/path_service.dart';
 import 'package:mediadrip/utilities/file_helper.dart';
 
 class DownloadService {
   /// Http client used in downloading from web
   final Client _client = http.Client();
+
+  /// [SettingsService] for any download settings required for service.
+  final SettingsService _settingsService = locator<SettingsService>();
 
   /// [PathService] for downloading to correct directory, validating file names, etc.
   final PathService _pathService = locator<PathService>();
@@ -52,6 +56,10 @@ class DownloadService {
       var file = await _pathService.getFileFromFileName(_configFileName, AvailableDirectories.configuration);
       
       _configFullPath = file.path;
+    }
+
+    if(_settingsService.data.updateYoutubeDLOnDownload) {
+      await updateYoutubeDownloader();
     }
   }
 

@@ -1,5 +1,6 @@
 {
     "dark_mode": false,
+    "update_ytdl": true,
     "feed_max_entries": 30,
     "application_storage": "",
     "youtube_conf": ""

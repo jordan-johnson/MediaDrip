@@ -22,18 +22,13 @@ dependencies:
     sdk: flutter
   provider: ^4.1.2
   get_it: ^4.0.2
-  file_chooser:
-    git:
-      url: git://github.com/google/flutter-desktop-embedding.git
-      path: ./plugins/file_chooser
-      ref: 1c641a9
   path: ^1.7.0
   path_provider: ^1.5.1
   path_provider_fde:
     git:
       url: git://github.com/google/flutter-desktop-embedding.git
       path: ./plugins/flutter_plugins/path_provider_fde
-      ref: 79d73d3
+      ref: be63fd1
   http: ^0.12.1
   xml: ^4.2.0
   html: ^0.14.0+3

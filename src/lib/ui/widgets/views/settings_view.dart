@@ -11,6 +11,7 @@ class _SettingsViewModel extends WidgetModel {
   final SettingsService _settingsService = locator<SettingsService>();
 
   bool get darkMode => _settingsService.data.isDarkMode;
+  bool get autoUpdate => _settingsService.data.updateYoutubeDLOnDownload;
   String get feedMaxEntries => _settingsService.data.feedMaxEntries.toString();
   String get applicationStorage => _settingsService.data.applicationStorage;
 
@@ -18,6 +19,12 @@ class _SettingsViewModel extends WidgetModel {
   TextEditingController feedMaxEntriesTextController = TextEditingController();
 
   _SettingsViewModel({@required BuildContext context}) : super(context: context);
+
+  void toggleAutomaticUpdates() {
+    _settingsService.data.updateYoutubeDLOnDownload = !_settingsService.data.updateYoutubeDLOnDownload;
+
+    save();
+  }
 
   void toggleDarkMode() {
     _settingsService.data.isDarkMode = !_settingsService.data.isDarkMode;
@@ -86,11 +93,11 @@ class SettingsView extends StatelessWidget {
                           ),
                           title: Text('Automatic updates'),
                           trailing: Switch(
-                            value: true,
-                            onChanged: (_) => print(''),
+                            value: model.autoUpdate,
+                            onChanged: (_) => model.toggleAutomaticUpdates(),
                             activeColor: Theme.of(context).primaryColor,
                           ),
-                          onTap: () => model.toggleDarkMode(),
+                          onTap: () => model.toggleAutomaticUpdates()
                         ),
                         ListTile(
                           title: Text('Manage configuration'),
