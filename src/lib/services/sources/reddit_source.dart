@@ -39,10 +39,7 @@ class RedditSource extends BaseSource {
   Future<String> interpret(String address) async {
     // if valid subreddit address
     if(address.contains(lookupAddresses[0]) && address.contains('\/r\/')) {
-      // prepend https:// if not found
-      if(!address.contains('https://')) {
-        address = 'https://$address';
-      }
+      address = validateAddress(address);
 
       // append .json if not found
       if(!address.contains('.json')) {

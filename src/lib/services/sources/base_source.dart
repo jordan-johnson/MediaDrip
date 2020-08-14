@@ -18,4 +18,14 @@ abstract class BaseSource implements FeedSource, DownloadSource {
 
     return null;
   }
+
+  @protected
+  String validateAddress(String address) {
+    // prepend https:// if not found
+    if(!address.contains('https://')) {
+      address = 'https://$address';
+    }
+
+    return address;
+  }
 }
