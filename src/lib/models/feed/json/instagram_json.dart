@@ -28,7 +28,7 @@ class InstagramPost implements InstagramPostItem {
       thumbnail = json['thumbnail_src'],
       fullSizeImage = json['display_url'],
       videoUrl = json['video_url'] ?? '',
-      description = json['edge_media_to_caption']['edges'][0]['node']['text'],
+      description = json['edge_media_to_caption']['edges'][0]['node']['text'] ?? '',
       children = (json['edge_sidecar_to_children'] != null) ? InstagramPost._parseChildren(json['edge_sidecar_to_children']) : List<InstagramPostItem>();
   
   static List<InstagramPostItem> _parseChildren(Map<String, dynamic> json) {

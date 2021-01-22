@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:mediadrip/utilities/file_helper.dart';
 import 'package:path/path.dart' as pathlib;
-import 'package:mediadrip/models/file/index.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Used in services to restrict access to the available directories.

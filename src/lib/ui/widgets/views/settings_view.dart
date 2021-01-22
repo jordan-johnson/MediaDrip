@@ -119,7 +119,7 @@ class SettingsView extends StatelessWidget {
                           controller: model.feedMaxEntriesTextController..text = model.feedMaxEntries,
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
-                              WhitelistingTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly
                           ],
                           decoration: InputDecoration(
                             labelText: 'Max Entries',

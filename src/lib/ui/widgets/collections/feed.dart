@@ -9,8 +9,6 @@ class _FeedModel extends WidgetModel {
   final Future<FeedResults> Function() future;
   final Widget Function(BuildContext context, IFeedItem entry) itemBuilder;
 
-  Future<FeedResults> Function() test;
-
   FeedResults results = FeedResults();
 
   bool _isLoading = false;
@@ -19,7 +17,7 @@ class _FeedModel extends WidgetModel {
   _FeedModel({
     @required BuildContext context,
     @required this.future,
-    @required this.itemBuilder
+    @required this.itemBuilder,
   });
 
   @override
@@ -48,7 +46,7 @@ class Feed<T extends IFeedItem> extends StatelessWidget {
   /// Dates are organized according to [FeedResultsModel].
   Feed({
     @required this.future,
-    @required this.itemBuilder
+    @required this.itemBuilder,
   });
 
   @override
@@ -61,7 +59,10 @@ class Feed<T extends IFeedItem> extends StatelessWidget {
           RefreshIndicator(
             onRefresh: () => model.initialize(),
             child: ListView(
-              children: _propagateFeed(context, model.results),
+              children: [
+                for(var widget in _propagateFeed(context, model.results))
+                  widget
+              ]
             )
           );
       }

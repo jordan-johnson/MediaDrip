@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:xml/xml.dart';
 
 XmlElement findElementOrNull(XmlElement element, String name, {String namespace}) {

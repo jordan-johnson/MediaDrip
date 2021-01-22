@@ -33,6 +33,8 @@ class FeedService {
   /// Complete list of feeds that are mapped by name and web feed address.
   Map<String, String> feeds = Map<String, String>();
 
+  List<String> errorMessages = List<String>();
+
   /// All entries stripped from [feeds] that are sorted by publishing date.
   /// 
   /// These entries will then be further sorted into [today], [yesterday], 
@@ -220,12 +222,18 @@ class FeedService {
       var source = getSourceByAddressLookup(feed.value);
 
       if(source != null) {
-        var content = await _downloadService.getResponseBodyAsString(feed.value);
-        var drips = await source.parse(content);
+        try {
+          var content = await _downloadService.getResponseBodyAsString(feed.value);
+          var drips = await source.parse(content);
 
-        if(drips != null) {
-          _entries.addAll(drips);
+          if(drips != null) {
+            _entries.addAll(drips);
+          }
+        } catch(Exception) {
+          _error('Feed, ${feed.key}, could not be loaded. If problem persists, delete the feed from settings.');
         }
+      } else {
+        _error('Source lookup failed for "${feed.value}". This usually means the feed you added is not supported. If problem persists, delete the feed from settings.');
       }
     }
   }
@@ -266,5 +274,9 @@ class FeedService {
         results.older.add(entry);
       }
     }
+  }
+
+  void _error(String message) {
+    errorMessages.add(message);
   }
 }
