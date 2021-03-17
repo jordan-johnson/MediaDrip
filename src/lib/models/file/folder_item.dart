@@ -7,8 +7,8 @@ class FolderItem implements IFileEntity {
   final String path;
   final FileSystemEntityType type;
 
-  final List<FolderItem> subFolders = List<FolderItem>();
-  final List<FileItem> files = List<FileItem>();
+  final List<FolderItem> subFolders = <FolderItem>[];
+  final List<FileItem> files = <FileItem>[];
 
   FolderItem({
     @required this.name,

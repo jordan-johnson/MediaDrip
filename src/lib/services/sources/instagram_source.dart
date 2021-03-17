@@ -31,7 +31,7 @@ class InstagramSource extends BaseSource {
 
   @override
   Future<List<Drip>> parse(String content) async {
-    var drips = List<Drip>();
+    var drips = <Drip>[];
     var document = htmlParser.parse(content);
     var scriptTags = document.getElementsByTagName('script');
     

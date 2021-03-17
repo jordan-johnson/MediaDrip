@@ -101,11 +101,11 @@ class FeedConfigurationView extends StatelessWidget {
                       title: Text('Confirm deletion'),
                       content: Text('Are you sure you wish to delete ${feedEntry.key}?'),
                       actions: [
-                        FlatButton(
+                        TextButton(
                           child: Text('Cancel'),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
-                        FlatButton(
+                        TextButton(
                           child: Text('Delete'),
                           onPressed: () {
                             model.deleteFeed(feedEntry.key);
@@ -160,7 +160,7 @@ class FeedConfigurationView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FlatButton(
+                    TextButton(
                       child: Text('Save'),
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -173,7 +173,7 @@ class FeedConfigurationView extends StatelessWidget {
                         }
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text('Cancel'),
                       onPressed: () => Navigator.of(context).pop(),
                     )
@@ -192,7 +192,7 @@ class FeedConfigurationView extends StatelessWidget {
       title: Text('Error'),
       content: Text(body),
       actions: [
-        FlatButton(
+        TextButton(
           child: Text('OK'),
           onPressed: () => Navigator.of(context).pop(),
         )

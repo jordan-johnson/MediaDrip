@@ -56,7 +56,7 @@ class YoutubeSource extends BaseSource {
   @override
   Future<List<Drip>> parse(String content) async {
     var xml = FeedXml.parse(content);
-    var drips = List<Drip>();
+    var drips = <Drip>[];
 
     for(var entry in xml.entries) {
       var drip = Drip(

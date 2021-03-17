@@ -57,7 +57,7 @@ class RedditSource extends BaseSource {
   Future<List<Drip>> parse(String content) async {
     var json = jsonDecode(content);
     var redditModel = RedditJson.fromJson(json);
-    var drips = List<Drip>();
+    var drips = <Drip>[];
 
     if(redditModel != null) {
       for(var entry in redditModel.data) {

@@ -58,8 +58,8 @@ class FileBrowser extends StatelessWidget {
             if(snapshot.connectionState == ConnectionState.done) {
               if(snapshot.hasData) {
                 var entities = snapshot.data;
-                var folderTiles = List<ListTile>();
-                var fileTiles = List<ListTile>();
+                var folderTiles = <ListTile>[];
+                var fileTiles = <ListTile>[];
 
                 for(var folder in entities.subFolders) {
                   var tile = ListTile(

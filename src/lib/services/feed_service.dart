@@ -28,18 +28,18 @@ class FeedService {
 
   /// List of [FeedSource] for correctly parsing the web content 
   /// via [FeedSource.parse].
-  List<FeedSource> _sources = List<FeedSource>();
+  List<FeedSource> _sources = <FeedSource>[];
 
   /// Complete list of feeds that are mapped by name and web feed address.
   Map<String, String> feeds = Map<String, String>();
 
-  List<String> errorMessages = List<String>();
+  List<String> errorMessages = <String>[];
 
   /// All entries stripped from [feeds] that are sorted by publishing date.
   /// 
   /// These entries will then be further sorted into [today], [yesterday], 
   /// [thisWeek], [thisMonth], and [older].
-  List<Drip> _entries = List<Drip>();
+  List<Drip> _entries = <Drip>[];
 
   /// Results from [_sortEntriesByDate] after [load] has been called.
   FeedResults results = FeedResults();

@@ -13,8 +13,8 @@ class FileEntity {
 }
 
 class StructuredFileEntities {
-  final List<FileEntity> folders = List<FileEntity>();
-  final List<FileEntity> files = List<FileEntity>();
+  final List<FileEntity> folders = <FileEntity>[];
+  final List<FileEntity> files = <FileEntity>[];
 
   void add(FileEntity entity) {
     switch(entity.type) {

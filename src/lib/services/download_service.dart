@@ -34,7 +34,7 @@ class DownloadService {
 
   /// Sources stored that will return [DownloadInstructionsModel] when an address matches 
   /// one of the lookup addresses.
-  List<DownloadSource> _sources = List<DownloadSource>();
+  List<DownloadSource> _sources = <DownloadSource>[];
 
   /// Checks if the youtube-dl configuration exists. If it doesn't exist, one will be 
   /// created from the template found in assets.

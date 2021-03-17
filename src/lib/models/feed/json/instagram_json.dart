@@ -29,10 +29,10 @@ class InstagramPost implements InstagramPostItem {
       fullSizeImage = json['display_url'],
       videoUrl = json['video_url'] ?? '',
       description = json['edge_media_to_caption']['edges'][0]['node']['text'] ?? '',
-      children = (json['edge_sidecar_to_children'] != null) ? InstagramPost._parseChildren(json['edge_sidecar_to_children']) : List<InstagramPostItem>();
+      children = (json['edge_sidecar_to_children'] != null) ? InstagramPost._parseChildren(json['edge_sidecar_to_children']) : <InstagramPostItem>[];
   
   static List<InstagramPostItem> _parseChildren(Map<String, dynamic> json) {
-    List<InstagramPostItem> items = List<InstagramPostItem>();
+    List<InstagramPostItem> items = <InstagramPostItem>[];
 
     for(var child in json['edges']) {
       var item = InstagramPostItem.fromJson(child['node']);
@@ -46,7 +46,7 @@ class InstagramPost implements InstagramPostItem {
 
 class InstagramJson {
   String username = '';
-  List<InstagramPost> posts = List<InstagramPost>();
+  List<InstagramPost> posts = <InstagramPost>[];
 
   InstagramJson.fromJson(Map<String, dynamic> json) {
     var userNode = json['entry_data']['ProfilePage'][0]['graphql']['user'];

@@ -1,11 +1,11 @@
 import 'package:mediadrip/models/feed/ifeed_item.dart';
 
 class FeedResults {
-  final List<IFeedItem> today = List<IFeedItem>();
-  final List<IFeedItem> yesterday = List<IFeedItem>();
-  final List<IFeedItem> thisWeek = List<IFeedItem>();
-  final List<IFeedItem> thisMonth = List<IFeedItem>();
-  final List<IFeedItem> older = List<IFeedItem>();
+  final List<IFeedItem> today = <IFeedItem>[];
+  final List<IFeedItem> yesterday = <IFeedItem>[];
+  final List<IFeedItem> thisWeek = <IFeedItem>[];
+  final List<IFeedItem> thisMonth = <IFeedItem>[];
+  final List<IFeedItem> older = <IFeedItem>[];
 
   void clearAll() {
     today.clear();
