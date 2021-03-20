@@ -1,7 +1,9 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:mediadrip/exceptions/sqlite_not_found_exception.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/models/database/itable.dart';
 import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/utilities/file_helper.dart';
 import 'package:path/path.dart';
@@ -19,13 +21,46 @@ class DatabaseService {
     if(_sqliteDatabase != null)
       return;
 
-    switch(Platform.operatingSystem) {
-      case 'windows':
-        await _loadWindowsBinary();
-      break;
+    try {
+      switch(Platform.operatingSystem) {
+        case 'windows':
+          await _loadWindowsBinary();
+        break;
+      }
+    } on SqliteNotFoundException catch(e) {
+      // display an alert that sqlite library not found
     }
+  }
 
-    _loadDatabase();
+  Future<void> openConnection() async {
+    if(_sqliteDatabase != null)
+      return;
+
+    var databaseExists = await _path.fileExistsInDirectory(_databaseFileName, AvailableDirectories.root);
+
+    if(databaseExists) {
+      var documentsDirectory = await _path.mediaDripDirectory;
+      var path = join(documentsDirectory, _databaseFileName);
+
+      _sqliteDatabase = sqlite3.open(path);
+    } else {
+      await _copyDatabaseAssetToDocuments();
+    }
+  }
+
+  // KEEP WORKING ON THIS WHEN RETURN
+  // need to plan out a clean way to insert records into a table
+  Future<void> insert(ITable table) async {
+    var prepare = table.prepare();
+  }
+
+  void closeConnection() {
+    if(_sqliteDatabase == null)
+      return;
+
+    print('closed connection');
+
+    _sqliteDatabase.dispose();
   }
 
   Future<void> _loadWindowsBinary() async {
@@ -34,27 +69,9 @@ class DatabaseService {
     var exists = await sqliteLibrary.exists();
 
     if(exists) {
-      // open.overrideFor(OperatingSystem.windows, () => DynamicLibrary.open(sqliteLibrary.path));
-
-      
-      // first create database then come back here to open the file
-      // we'll need to include core.db in our assets directory
-      // _sqliteDatabase = sqlite3.
+      open.overrideFor(OperatingSystem.windows, () => DynamicLibrary.open(sqliteLibrary.path));
     } else {
-      print('nope');
-    }
-  }
-
-  Future<void> _loadDatabase() async {
-    if(_sqliteDatabase != null)
-      return;
-
-    var databaseExists = await _path.fileExistsInDirectory(_databaseFileName, AvailableDirectories.root);
-
-    if(databaseExists) {
-      // loading
-    } else {
-      await _copyDatabaseAssetToDocuments();
+      throw new SqliteNotFoundException('Missing sqlite3.dll in application directory!');
     }
   }
 
