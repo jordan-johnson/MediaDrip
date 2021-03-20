@@ -63,6 +63,10 @@ class FileHelper {
     return pathlib.extension(path);
   }
 
+  static Future<void> writeBytesToPath(String path, List<int> bytes) async {
+    await File(path).writeAsBytes(bytes);
+  }
+
   static Future<FolderItem> buildFolderContentsFromPath(String path) async {
     var completer = Completer<FolderItem>();
     var listing = Directory(path).list();

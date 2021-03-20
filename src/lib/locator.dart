@@ -13,6 +13,7 @@ final locator = GetIt.instance;
 /// [PathService], [SettingsService], [DownloadService], and [FeedService] are registered here.
 void setupLocator() {
   locator.registerLazySingleton(() => PathService());
+  locator.registerLazySingleton(() => DatabaseService());
   locator.registerLazySingleton(() => SettingsService());
   locator.registerLazySingleton(() => DownloadService());
   locator.registerLazySingleton(() => FeedService());

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/models/file/settings.dart';
+import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/services/path_service.dart';
 
 class SettingsService {
@@ -22,6 +23,8 @@ class SettingsService {
   /// Refer to [PathService] for more information.
   final PathService _path = locator<PathService>();
 
+  final DatabaseService _database = locator<DatabaseService>();
+
   /// The model for our application. Values are encoded and decoded here.
   /// 
   /// The [Settings] extends `ChangeNotifier`, notifying `Consumer`s of changes to 
@@ -37,6 +40,8 @@ class SettingsService {
   /// the assets folder.
   Future<Settings> load() async {
     String contents;
+
+    await _database.init();
 
     var fileExists = await _path.fileExistsInDirectory(_settingsFileName, _settingsDirectoryEnum);
 
