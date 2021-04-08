@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/models/file/settings.dart';
+import 'package:mediadrip/services/database/data_source.dart';
+import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/sources.dart';
 import 'package:mediadrip/ui/theme/theme.dart';
@@ -14,10 +16,21 @@ class MediaDrip extends StatelessWidget {
   /// Settings service saves and retrieves data from storage.
   final SettingsService _settingsService = locator<SettingsService>();
 
+  final DataSource _databaseContext = SqliteDatabase();
+
   /// MediaDrip allows you to download, convert, merge, and trim videos and other media.
   /// 
   /// Visit the [github repository](https://github.com/jordan-johnson/MediaDrip) for more information.
   MediaDrip();
+
+  Future<Settings> loadApplicationSettings() async {
+    await _databaseContext.init();
+    await _databaseContext.openConnection();
+
+    // get settings from database
+
+    await _databaseContext.closeConnection();
+  }
 
   /// Builds the app.
   /// 
@@ -58,7 +71,6 @@ class MediaDrip extends StatelessWidget {
 
 void main() {
   setupLocator();
-
   loadSources();
 
   runApp(MediaDrip());
