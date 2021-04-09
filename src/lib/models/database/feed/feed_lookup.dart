@@ -15,5 +15,5 @@ class FeedLookup {
     this.id = map['id'],
     this.label = map['label'],
     this.address = map['address'],
-    this.parentId = map['parentId'];
+    this.parentId = map['parent_id'];
 }
