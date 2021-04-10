@@ -38,7 +38,7 @@ class _SettingsViewModel extends WidgetModel {
 
     notifyListeners();
 
-    await _settingsService.save();
+    _settingsService.update();
   }
 
   @override

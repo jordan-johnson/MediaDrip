@@ -24,7 +24,9 @@ class _FeedConfigurationViewModel extends WidgetModel {
   }
 
   Future<void> updateFeeds() async {
-    this.feeds = await _feedService.getFeedsFromConfig();
+    for(var feed in await _feedService.getAllFeeds()) {
+      this.feeds[feed.label] = feed.address;
+    }
 
     notifyListeners();
   }
@@ -59,7 +61,7 @@ class _FeedConfigurationViewModel extends WidgetModel {
   }
 
   Future<void> _saveChanges() async {
-    await _feedService.writeFeedsToConfig(feeds);
+    // await _feedService.writeFeedsToConfig(feeds);
 
     notifyListeners();
   }

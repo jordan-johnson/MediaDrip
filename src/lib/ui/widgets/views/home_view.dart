@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/database/feed/feed_lookup_dao.dart';
-import 'package:mediadrip/models/database/feed/feed_lookup_dao_impl.dart';
 import 'package:mediadrip/models/feed/feed_results.dart';
 import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
@@ -14,11 +12,9 @@ import 'package:mediadrip/utilities/index.dart';
 
 class _HomeViewModel extends WidgetModel {
   final FeedService _feedService;
-  final FeedLookupDao _feed;
 
   _HomeViewModel({@required BuildContext context}) :
     _feedService = locator<FeedService>(),
-    _feed = FeedLookupDaoImpl(),
     super(context: context);
 
   Future<FeedResults> getFeed() async {

@@ -1,87 +1,51 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/file/settings.dart';
-import 'package:mediadrip/services/index.dart';
-import 'package:mediadrip/services/path_service.dart';
+import 'package:mediadrip/models/database/settings.dart';
+import 'package:mediadrip/services/database/data_source.dart';
+import 'package:mediadrip/services/database/sqlite_database.dart';
+import 'package:sqlite3/sqlite3.dart';
 
 class SettingsService {
-  /// The directory where the settings file will be stored.
-  /// 
-  /// NOTE: The configuration directory also stores the youtube-dl configuration file. 
-  /// Any other config files will be placed there as well.
-  /// 
-  /// Refer to [AvailableDirectories] for more information.
-  final AvailableDirectories _settingsDirectoryEnum = AvailableDirectories.configuration;
+  final DataSource<Database> _dataSource = locator<SqliteDatabase>();
 
-  /// The json file that will store all key-value pairs for our application.
-  final String _settingsFileName = 'settings.json';
+  final String _tableName = 'settings';
 
-  /// The path service is needed for parsing our requests; retrieving and saving our model 
-  /// to storage.
+  /// The data model for our application.
   /// 
-  /// Refer to [PathService] for more information.
-  final PathService _path = locator<PathService>();
-
-  /// The model for our application. Values are encoded and decoded here.
-  /// 
-  /// The [Settings] extends `ChangeNotifier`, notifying `Consumer`s of changes to 
-  /// the model.
+  /// The model extends `ChangeNotifier`, notifying `Consumer`s of changes.
   Settings data;
 
-  /// [SettingsService] provides functionality for storing application settings for later use.
+  /// `SettingsService` acts as a middle-man between the database and settings model.
+  /// 
+  /// Essentially a Dao implementation but it needs to be accessible everywhere.
   SettingsService();
 
-  /// Asynchronously loads the settings json file.
-  /// 
-  /// If the settings file does not exist, one will be created based on the template found in 
-  /// the assets folder.
   Future<Settings> load() async {
-    String contents;
+    await _dataSource.init();
 
-    var fileExists = await _path.fileExistsInDirectory(_settingsFileName, _settingsDirectoryEnum);
+    return await _dataSource.retrieve<Settings>((source) {
+      final results = source.select('SELECT * FROM $_tableName LIMIT 1');
 
-    if(fileExists) {
-      var file = await _path.getFileFromFileName(_settingsFileName, _settingsDirectoryEnum);
-
-      contents = await file.readAsString();
-    } else {
-      // load template file from assets
-      contents = await rootBundle.loadString('lib/assets/$_settingsFileName');
-    }
-
-    _decodeContents(contents);
-
-    if(!fileExists)
-      await _writeInitialPaths();
-
-    return data;
+      return Settings.fromMap(results.first);
+    });
   }
 
-  /// Encodes the current [SettingsModel] and saves the file.
-  Future<void> save() async {
-    var encoded = jsonEncode(data);
-
-    await _path.createFileInDirectory(_settingsFileName, encoded, _settingsDirectoryEnum);
-  }
-
-  /// Decodes the provided [contents] and saves the [Settings] in our [data] property.
-  void _decodeContents(String contents) {
-    Map<String, dynamic> decoded = jsonDecode(contents);
-
-    data = Settings.fromJson(decoded);
-  }
-
-  /// This method is used on creation of our settings file to write the initial paths for 
-  /// our [Settings], such as [SettingsModel.applicationStorage].
-  /// 
-  /// Simply put, the settings file template needs information about the paths for our 
-  /// current device.
-  /// 
-  /// Refer to the [load] method for more information.
-  Future<void> _writeInitialPaths() async {
-    data.applicationStorage = await _path.mediaDripDirectory;
-
-    await save();
+  void update() {
+    _dataSource.execute((source) {
+      final statement = source.prepare('''UPDATE $_tableName SET 
+        dark_mode = ?, 
+        update_tooling = ?, 
+        max_feed_entries = ?, 
+        storage_path = ?, 
+        ytdl_config_path = ?''');
+      
+      statement.execute([
+        data.isDarkMode,
+        data.updateYoutubeDLOnDownload,
+        data.feedMaxEntries,
+        data.applicationStorage,
+        data.youtubeConfiguration
+      ]);
+      statement.dispose();
+    });
   }
 }

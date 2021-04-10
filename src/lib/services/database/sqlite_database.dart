@@ -65,10 +65,6 @@ class SqliteDatabase implements DataSource<Database> {
   Database getDatabase() {
     if(_sqliteDatabase == null)
       throw DataSourceException('Cannot get database; returned null. Please initialize.');
-
-    execute((source) => {
-      
-    });
     
     return _sqliteDatabase;
   }
@@ -82,19 +78,15 @@ class SqliteDatabase implements DataSource<Database> {
   /// application and never closing the connection.
   @override
   Future<void> execute(void Function(Database source) action) async {
-    try {
-      // if a connection already exists, don't open a new one
+    // if a connection already exists, don't open a new one
       if(_sqliteDatabase == null)
         await this.openConnection();
 
       final Database source = getDatabase();
 
-      action(source);
+      print('called exec');
 
-      await this.closeConnection();
-    } catch(e) {
-      print('error executing::$e');
-    }
+      action(source);
   }
 
   /// Hacky method for boilerplate to open a connection to the database,
@@ -109,19 +101,13 @@ class SqliteDatabase implements DataSource<Database> {
   Future<R> retrieve<R>(R Function(Database source) action) async {
     dynamic returnValue;
 
-    try {
-      // if a connection already exists, don't open a new one
+    // if a connection already exists, don't open a new one
       if(_sqliteDatabase == null)
         await this.openConnection();
 
       final Database source = getDatabase();
 
       returnValue = action(source);
-
-      await this.closeConnection();
-    } catch(e) {
-      print('error executing::$e');
-    }
 
     return returnValue;
   }

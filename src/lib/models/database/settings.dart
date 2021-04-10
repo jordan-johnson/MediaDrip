@@ -54,8 +54,8 @@ class Settings extends ChangeNotifier {
   Settings();
 
   Settings.fromMap(Map<String, dynamic> map) {
-    isDarkMode = map['dark_mode'];
-    updateYoutubeDLOnDownload = map['update_tooling'];
+    isDarkMode = map['dark_mode'] == 0 ? false : true;
+    updateYoutubeDLOnDownload = map['update_tooling'] == 0 ? false : true;
     feedMaxEntries = map['max_feed_entries'];
     applicationStorage = map['storage_path'];
     youtubeConfiguration = map['ytdl_config_path'];

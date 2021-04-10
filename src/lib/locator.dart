@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/index.dart';
 
 /// Locates registered services using the Get_It package.
@@ -13,6 +14,7 @@ final locator = GetIt.instance;
 /// [PathService], [SettingsService], [DownloadService], and [FeedService] are registered here.
 void setupLocator() {
   locator.registerLazySingleton(() => PathService());
+  locator.registerLazySingleton(() => SqliteDatabase());
   locator.registerLazySingleton(() => SettingsService());
   locator.registerLazySingleton(() => DownloadService());
   locator.registerLazySingleton(() => FeedService());

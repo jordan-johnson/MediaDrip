@@ -4,5 +4,5 @@ class SqliteNotFoundException implements Exception {
   SqliteNotFoundException(this.message);
 
   @override
-  String toString() => 'SQLiteNotFoundException: $message';
+  String toString() => 'SqliteNotFoundException: $message';
 }
