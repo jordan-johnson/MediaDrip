@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediadrip/domain/drip/download_instructions.dart';
 import 'package:mediadrip/domain/drip/drip.dart';
+import 'package:mediadrip/domain/settings/settings_repository.dart';
 import 'package:mediadrip/domain/source/download_source.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/index.dart';
@@ -15,7 +16,7 @@ class DownloadService {
   final Client _client = http.Client();
 
   /// [SettingsService] for any download settings required for service.
-  final SettingsService _settingsService = locator<SettingsService>();
+  final SettingsRepository _settingsService = locator<SettingsRepository>();
 
   /// [PathService] for downloading to correct directory, validating file names, etc.
   final PathService _pathService = locator<PathService>();
@@ -56,10 +57,6 @@ class DownloadService {
       var file = await _pathService.getFileFromFileName(_configFileName, AvailableDirectories.configuration);
       
       _configFullPath = file.path;
-    }
-
-    if(_settingsService.data.updateYoutubeDLOnDownload) {
-      await updateYoutubeDownloader();
     }
   }
 
