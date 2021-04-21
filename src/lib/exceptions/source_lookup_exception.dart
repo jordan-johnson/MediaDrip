@@ -1,4 +1,4 @@
-import 'package:mediadrip/models/source/source.dart';
+import 'package:mediadrip/domain/source/source.dart';
 
 class SourceLookupException implements Exception {
   final Source source;

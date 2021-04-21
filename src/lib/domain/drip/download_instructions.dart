@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mediadrip/models/file/drip.dart';
+import 'package:mediadrip/domain/drip/drip.dart';
 
 class DownloadInstructions {
   final String fileName;

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:html/parser.dart' as htmlParser;
-import 'package:mediadrip/models/feed/json/instagram_json.dart';
-import 'package:mediadrip/models/file/download_instructions.dart';
-import 'package:mediadrip/models/file/drip.dart';
+import 'package:mediadrip/domain/drip/download_instructions.dart';
+import 'package:mediadrip/domain/drip/drip.dart';
+import 'package:mediadrip/domain/feed/json/instagram_json.dart';
 import 'package:mediadrip/services/sources/base_source.dart';
 import 'package:mediadrip/utilities/date_time_helper.dart';
 

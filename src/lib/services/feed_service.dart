@@ -1,11 +1,11 @@
 import 'dart:core';
+import 'package:mediadrip/domain/drip/drip.dart';
 import 'package:mediadrip/domain/feed/feed_lookup.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
+import 'package:mediadrip/domain/source/feed_source.dart';
 import 'package:mediadrip/exceptions/feed_load_exception.dart';
 import 'package:mediadrip/exceptions/source_lookup_exception.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/feed/feed_results.dart';
-import 'package:mediadrip/models/file/drip.dart';
-import 'package:mediadrip/models/source/feed_source.dart';
 import 'package:mediadrip/services/database/data_source.dart';
 import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/download_service.dart';

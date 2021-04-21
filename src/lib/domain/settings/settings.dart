@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Settings extends ChangeNotifier {
+  static final String tableName = 'settings';
+
   bool _isDarkMode = false;
   bool get isDarkMode => _isDarkMode;
 

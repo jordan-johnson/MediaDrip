@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mediadrip/domain/feed/feed_lookup_repository.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/feed/feed_results.dart';
 import 'package:mediadrip/services/database/data_source.dart';
 import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/feed_service.dart';
+import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/collections/feed.dart';
 import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
@@ -13,16 +15,16 @@ import 'package:mediadrip/utilities/index.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 class _HomeViewModel extends WidgetModel {
-  final DataSource<Database> _dataSource;
+  final SettingsService _settingsService;
+  final FeedLookupRepository _feedLookupRepository;
 
   _HomeViewModel({@required BuildContext context}) :
-    _dataSource = locator<SqliteDatabase>(),
+    _settingsService = locator<SettingsService>(),
+    _feedLookupRepository = FeedLookupRepository(),
     super(context: context);
 
   Future<FeedResults> getFeedResults() async {
-    return await _dataSource.retrieve<FeedResults>((source) {
-      final feeds = source.select('SELECT * FROM ');
-    });
+    final lookups = await _feedLookupRepository.getAllFeeds();
   }
 }
 

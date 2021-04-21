@@ -1,5 +1,5 @@
-import 'package:mediadrip/models/feed/xml/author.dart';
-import 'package:mediadrip/models/feed/xml/media.dart';
+import 'package:mediadrip/domain/feed/xml/author.dart';
+import 'package:mediadrip/domain/feed/xml/media.dart';
 import 'package:mediadrip/utilities/xml_helper.dart';
 import 'package:xml/xml.dart';
 

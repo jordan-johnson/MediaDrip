@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mediadrip/domain/drip/drip.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/file/drip.dart';
 import 'package:mediadrip/services/download_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/drip_wrapper.dart';

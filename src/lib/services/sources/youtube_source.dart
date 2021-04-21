@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
-import 'package:mediadrip/models/feed/xml/feed_xml.dart';
-import 'package:mediadrip/models/file/download_instructions.dart';
-import 'package:mediadrip/models/file/drip.dart';
+import 'package:mediadrip/domain/drip/download_instructions.dart';
+import 'package:mediadrip/domain/drip/drip.dart';
+import 'package:mediadrip/domain/feed/xml/feed_xml.dart';
 import 'package:mediadrip/services/sources/index.dart';
 
 class YoutubeSource extends BaseSource {

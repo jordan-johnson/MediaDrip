@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as pathlib;
 import 'package:flutter/material.dart';
-import 'package:mediadrip/models/file/index.dart';
 
 class FileHelper {
   /// Gets [Directory] safely by creating the directory if it doesn't exist.
@@ -65,53 +64,5 @@ class FileHelper {
 
   static Future<void> writeBytesToPath(String path, List<int> bytes) async {
     await File(path).writeAsBytes(bytes);
-  }
-
-  static Future<FolderItem> buildFolderContentsFromPath(String path) async {
-    var completer = Completer<FolderItem>();
-    var listing = Directory(path).list();
-
-    var currentFolder = FolderItem(
-      name: getFileNameFromPathWithoutExtension(path),
-      path: path,
-      type: FileSystemEntityType.directory
-    );
-
-    listing.listen((item) {
-      _addItemToFolder(item, currentFolder);
-    }, onDone: () => completer.complete(currentFolder));
-
-    return completer.future;
-  }
-
-  static void _addItemToFolder(FileSystemEntity entity, FolderItem folder) {
-    var entityPath = entity.path;
-    var entityType = FileSystemEntity.typeSync(entityPath);
-
-    switch(entityType) {
-      case FileSystemEntityType.directory:
-        var folderItem = FolderItem(
-          name: getFileNameFromPathWithoutExtension(entityPath),
-          path: entityPath,
-          type: FileSystemEntityType.directory
-        );
-
-        folder.subFolders.add(folderItem);
-      break;
-      case FileSystemEntityType.file:
-      default:
-        var fileData = File(entityPath);
-        var file = FileItem(
-          name: getFileNameFromPathWithExtension(entityPath),
-          path: entityPath,
-          type: FileSystemEntityType.file,
-          lastModified: fileData.lastModifiedSync(),
-          size: fileData.lengthSync(),
-          data: fileData
-        );
-
-        folder.files.add(file);
-      break;
-    }
   }
 }

@@ -1,4 +1,4 @@
-import 'package:mediadrip/models/feed/ifeed_item.dart';
+import 'package:mediadrip/domain/feed/ifeed_item.dart';
 
 class FeedResults {
   final List<IFeedItem> today = <IFeedItem>[];

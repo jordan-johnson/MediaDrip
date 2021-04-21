@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/models/feed/feed_results.dart';
-import 'package:mediadrip/models/feed/ifeed_item.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
+import 'package:mediadrip/domain/feed/ifeed_item.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/drip_header.dart';
 
