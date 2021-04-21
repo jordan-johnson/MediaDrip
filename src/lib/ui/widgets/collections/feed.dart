@@ -43,7 +43,7 @@ class Feed<T extends IFeedItem> extends StatelessWidget {
 
   /// Creates a date-based feed.
   /// 
-  /// Dates are organized according to [FeedResultsModel].
+  /// Dates are organized according to [FeedResults].
   Feed({
     @required this.future,
     @required this.itemBuilder,

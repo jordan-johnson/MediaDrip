@@ -1,4 +1,4 @@
-import 'package:mediadrip/models/database/feed/feed_lookup.dart';
+import 'package:mediadrip/domain/feed/feed_lookup.dart';
 
 class FeedLoadException implements Exception {
   final FeedLookup feed;

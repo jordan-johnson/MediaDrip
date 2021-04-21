@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/database/data_source.dart';
-import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/sources.dart';
 import 'package:mediadrip/ui/theme/theme.dart';
 import 'package:mediadrip/utilities/routes.dart';
+import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:provider/provider.dart';
-
-import 'models/database/settings.dart';
 
 class MediaDrip extends StatelessWidget {
   /// Application title

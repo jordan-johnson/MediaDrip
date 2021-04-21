@@ -1,5 +1,5 @@
+import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/database/settings.dart';
 import 'package:mediadrip/services/database/data_source.dart';
 import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:sqlite3/sqlite3.dart';

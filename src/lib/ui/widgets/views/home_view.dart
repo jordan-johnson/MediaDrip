@@ -3,40 +3,30 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/models/feed/feed_results.dart';
+import 'package:mediadrip/services/database/data_source.dart';
+import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/collections/feed.dart';
-import 'package:mediadrip/ui/widgets/drip_dialog.dart';
 import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
+import 'package:sqlite3/sqlite3.dart';
 
 class _HomeViewModel extends WidgetModel {
-  final FeedService _feedService;
+  final DataSource<Database> _dataSource;
 
   _HomeViewModel({@required BuildContext context}) :
-    _feedService = locator<FeedService>(),
+    _dataSource = locator<SqliteDatabase>(),
     super(context: context);
 
-  Future<FeedResults> getFeed() async {
-    await _feedService.load();
-
-    return _feedService.results;
+  Future<FeedResults> getFeedResults() async {
+    return await _dataSource.retrieve<FeedResults>((source) {
+      final feeds = source.select('SELECT * FROM ');
+    });
   }
 }
 
 class HomeView extends StatelessWidget {
-  Widget feedErrorDialog(BuildContext context, String message) {
-    print('test $message');
-    return DripDialog(
-      width: 400,
-      height: 200,
-      children: [
-        Text('Hello!'),
-        Text(message)
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return WidgetProvider<_HomeViewModel>(
@@ -46,7 +36,7 @@ class HomeView extends StatelessWidget {
           title: 'MediaDrip',
           route: Routes.home,
           child: Feed(
-            future: () => model.getFeed(),
+            future: () => model.getFeedResults(),
             itemBuilder: (ctx, item) {
               return ListTile(
                 leading: SizedBox(

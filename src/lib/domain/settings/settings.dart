@@ -16,11 +16,6 @@ class Settings extends ChangeNotifier {
   String _youtubeConfiguration = '';
   String get youtubeConfiguration => _youtubeConfiguration;
 
-  /// come back
-  /// 
-  /// write DAO and sqlite implementation for retrieving settings
-  /// from database
-
   set updateYoutubeDLOnDownload(bool value) {
     _updateYoutubeDLOnDownload = value;
 

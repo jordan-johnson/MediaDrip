@@ -69,45 +69,25 @@ class SqliteDatabase implements DataSource<Database> {
     return _sqliteDatabase;
   }
 
-  /// Hacky method for boilerplate to open a connection to the database,
-  /// execute a provided action, then close the connection.
-  /// 
-  /// This is bad code but necessary until the Dart devs get around to 
-  /// detecting application exiting on Windows. I'd prefer opening and 
-  /// closing many times subsequently rather than the user closing the 
-  /// application and never closing the connection.
   @override
   Future<void> execute(void Function(Database source) action) async {
     // if a connection already exists, don't open a new one
-      if(_sqliteDatabase == null)
-        await this.openConnection();
+    if(_sqliteDatabase == null)
+      await this.openConnection();
 
-      final Database source = getDatabase();
+    final Database source = getDatabase();
 
-      print('called exec');
-
-      action(source);
+    action(source);
   }
 
-  /// Hacky method for boilerplate to open a connection to the database,
-  /// execute a provided action, close the connection, then return results 
-  /// from the executed action.
-  /// 
-  /// This is bad code but necessary until the Dart devs get around to 
-  /// detecting application exiting on Windows. I'd prefer opening and 
-  /// closing many times subsequently rather than the user closing the 
-  /// application and never closing the connection.
   @override
   Future<R> retrieve<R>(R Function(Database source) action) async {
-    dynamic returnValue;
-
     // if a connection already exists, don't open a new one
-      if(_sqliteDatabase == null)
-        await this.openConnection();
+    if(_sqliteDatabase == null)
+      await this.openConnection();
 
-      final Database source = getDatabase();
-
-      returnValue = action(source);
+    final Database source = getDatabase();
+    final returnValue = action(source);
 
     return returnValue;
   }
