@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/services/feed_service.dart';
+// import 'package:mediadrip/locator.dart';
+// import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/providers/widget_provider_value.dart';
 import 'package:mediadrip/ui/widgets/drip_dialog.dart';
@@ -9,7 +9,7 @@ import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
 
 class _FeedConfigurationViewModel extends WidgetModel {
-  final FeedService _feedService = locator<FeedService>();
+  // final FeedService _feedService = locator<FeedService>();
 
   final TextEditingController nameTextController = TextEditingController();
   final TextEditingController addressTextController = TextEditingController();
@@ -24,9 +24,9 @@ class _FeedConfigurationViewModel extends WidgetModel {
   }
 
   Future<void> updateFeeds() async {
-    for(var feed in await _feedService.getAllFeeds()) {
-      this.feeds[feed.label] = feed.address;
-    }
+    // for(var feed in await _feedService.getAllFeeds()) {
+    //   this.feeds[feed.label] = feed.address;
+    // }
 
     notifyListeners();
   }
@@ -47,17 +47,18 @@ class _FeedConfigurationViewModel extends WidgetModel {
   }
 
   Future<bool> saveNewFeed() async {
-    var interpreted = await _feedService.getInterpretedAddress(addressTextController.text);
-
-    if(interpreted != null) {
-      feeds[nameTextController.text] = interpreted;
-
-      await _saveChanges();
-
-      return true;
-    }
-
     return false;
+    // var interpreted = await _feedService.getInterpretedAddress(addressTextController.text);
+
+    // if(interpreted != null) {
+    //   feeds[nameTextController.text] = interpreted;
+
+    //   await _saveChanges();
+
+    //   return true;
+    // }
+
+    // return false;
   }
 
   Future<void> _saveChanges() async {

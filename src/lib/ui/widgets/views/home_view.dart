@@ -1,35 +1,22 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mediadrip/domain/feed/feed_lookup_repository.dart';
-import 'package:mediadrip/domain/feed/feed_results.dart';
-import 'package:mediadrip/domain/settings/settings_repository.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
+import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/collections/feed.dart';
 import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
 
 class _HomeViewModel extends WidgetModel {
-  final SettingsRepository _settingsRepository;
-  final FeedLookupRepository _feedLookupRepository;
+  final FeedService _feedService;
 
   _HomeViewModel({@required BuildContext context}) :
-    _settingsRepository = locator<SettingsRepository>(),
-    _feedLookupRepository = FeedLookupRepository(),
+    _feedService = locator<FeedService>(),
     super(context: context);
 
   Future<FeedResults> getFeedResults() async {
-    final lookups = await _feedLookupRepository.getAllFeeds();
-    final maxEntries = await _settingsRepository.getSettings().then((x) => x.feedMaxEntries);
-
-    if(lookups == null || lookups.isEmpty)
-      return FeedResults();
-
-    // download feeds
-    // order entries by date
-    // remove excess
-    // fill feedresults
+    return await _feedService.getResults();
   }
 }
 

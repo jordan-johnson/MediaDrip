@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediadrip/domain/drip/download_instructions.dart';
 import 'package:mediadrip/domain/drip/drip.dart';
-import 'package:mediadrip/domain/settings/settings_repository.dart';
+// import 'package:mediadrip/domain/settings/settings_repository.dart';
 import 'package:mediadrip/domain/source/download_source.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/index.dart';
@@ -16,7 +16,7 @@ class DownloadService {
   final Client _client = http.Client();
 
   /// [SettingsService] for any download settings required for service.
-  final SettingsRepository _settingsService = locator<SettingsRepository>();
+  // final SettingsRepository _settingsRepository = locator<SettingsRepository>();
 
   /// [PathService] for downloading to correct directory, validating file names, etc.
   final PathService _pathService = locator<PathService>();

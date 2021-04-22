@@ -1,8 +1,9 @@
+import 'package:mediadrip/domain/settings/isettings_repository.dart';
 import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/database/sqlite_database.dart';
 
-class SettingsRepository {
+class SettingsRepository implements ISettingsRepository {
   final SqliteDatabase _dataSource = locator<SqliteDatabase>();
 
   Settings _settings;
@@ -23,6 +24,6 @@ class SettingsRepository {
   }
 
   Future<void> updateSettings() {
-    
+    return null;
   }
 }

@@ -1,9 +1,10 @@
 import 'package:mediadrip/domain/source/download_source.dart';
 import 'package:mediadrip/domain/source/feed_source.dart';
+import 'package:mediadrip/domain/source/isource_repository.dart';
 import 'package:mediadrip/domain/source/source.dart';
 import 'package:mediadrip/exceptions/source_repository_exception.dart';
 
-class SourceRepository {
+class SourceRepository implements ISourceRepository {
   List<FeedSource> _feedSources = <FeedSource>[];
   List<DownloadSource> _downloadSources = <DownloadSource>[];
 

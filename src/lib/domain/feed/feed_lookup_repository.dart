@@ -1,8 +1,10 @@
 import 'package:mediadrip/domain/feed/feed_lookup.dart';
+import 'package:mediadrip/domain/feed/ifeed_lookup_repository.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/database/sqlite_database.dart';
 
-class FeedLookupRepository {
+/// Sqlite3 implementation for getting data from feed lookup table.
+class FeedLookupRepository implements IFeedLookupRepository {
   final SqliteDatabase _dataSource = locator<SqliteDatabase>();
 
   Future<List<FeedLookup>> getAllFeeds() async {
