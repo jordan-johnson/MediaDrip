@@ -1,10 +1,17 @@
 import 'package:mediadrip/domain/source/download_source.dart';
 import 'package:mediadrip/domain/source/feed_source.dart';
+import 'package:mediadrip/domain/source/source.dart';
 import 'package:mediadrip/exceptions/source_repository_exception.dart';
 
 class SourceRepository {
   List<FeedSource> _feedSources = <FeedSource>[];
   List<DownloadSource> _downloadSources = <DownloadSource>[];
+
+  // Adds a source to both feed and download source containers.
+  void addSource(Source source) {
+    addFeedSource(source);
+    addDownloadSource(source);
+  }
 
   /// Adds a source to the collection for later use in parsing web feeds.
   void addFeedSource(FeedSource source) {

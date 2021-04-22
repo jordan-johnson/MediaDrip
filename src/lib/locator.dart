@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:mediadrip/domain/settings/settings_repository.dart';
+import 'package:mediadrip/domain/source/source_repository.dart';
 import 'package:mediadrip/services/database/sqlite_database.dart';
 import 'package:mediadrip/services/index.dart';
 
@@ -17,6 +18,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PathService());
   locator.registerLazySingleton(() => SqliteDatabase());
   locator.registerLazySingleton(() => SettingsRepository());
+  locator.registerLazySingleton(() => SourceRepository());
   locator.registerLazySingleton(() => DownloadService());
   locator.registerLazySingleton(() => FeedService());
 }
