@@ -23,7 +23,7 @@ class SettingsRepository implements ISettingsRepository {
     return _settings;
   }
 
-  Future<void> updateSettings() {
+  Future<void> saveSettings(Settings settings) {
     return null;
   }
 }

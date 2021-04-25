@@ -5,19 +5,20 @@ import 'package:mediadrip/domain/feed/feed_lookup.dart';
 import 'package:mediadrip/domain/feed/feed_lookup_repository.dart';
 import 'package:mediadrip/domain/feed/feed_results.dart';
 import 'package:mediadrip/domain/feed/ifeed_lookup_repository.dart';
-import 'package:mediadrip/domain/settings/isettings_repository.dart';
-import 'package:mediadrip/domain/settings/settings_repository.dart';
 import 'package:mediadrip/domain/source/feed_source.dart';
 import 'package:mediadrip/domain/source/isource_repository.dart';
 import 'package:mediadrip/domain/source/source_repository.dart';
 import 'package:mediadrip/exceptions/feed_load_exception.dart';
 import 'package:mediadrip/exceptions/source_lookup_exception.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/logging.dart';
+import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/utilities/date_time_helper.dart';
 import 'package:mediadrip/utilities/web_download_helper.dart';
 
 class FeedService {
-  final ISettingsRepository _settingsRepository = locator<SettingsRepository>();
+  final Logger _log = getLogger('FeedService');
+  final SettingsService _settingsRepository = locator<SettingsService>();
   final ISourceRepository _sourceRepository = locator<SourceRepository>();
   final IFeedLookupRepository _lookupRepository = FeedLookupRepository();
   final IDripRepository _dripRepository = DripRepository();
@@ -26,14 +27,27 @@ class FeedService {
   FeedService();
 
   Future<FeedResults> getResults() async {
-    final lookups = await _lookupRepository.getAllFeeds();
+    try {
+      final lookups = await _lookupRepository.getAllFeeds();
 
-    if(lookups == null || lookups.isEmpty)
-      return FeedResults();
+      if(lookups == null || lookups.isEmpty) {
+        _log.i('Returned 0 results.');
+
+        return FeedResults();
+      }
+      
+      await _initializeSourceLookupMatching(lookups);
+
+      return await _processDrips();
+    } on SourceLookupException catch(e) {
+      _log.w(e.message);
+    } on FeedLoadException catch(e) {
+      _log.e(e.message);
+    } on Exception catch(e, stack) {
+      _log.e(e.toString(), 0, stack);
+    }
     
-    await _initializeSourceLookupMatching(lookups);
-
-    return await _processDrips();
+    return FeedResults();
   }
 
   Future<void> _initializeSourceLookupMatching(List<FeedLookup> lookups) async {
@@ -41,9 +55,9 @@ class FeedService {
       final source = _sourceRepository.getFeedSourceByAddressLookup(lookup.address);
 
       if(source != null) {
-        _downloadFeedLookup(source, lookup);
+        await _downloadFeedLookup(source, lookup);
       } else {
-        throw SourceLookupException('Source lookup failed for ${lookup.address}. This usually means the feed is not supported');
+        throw SourceLookupException('Source lookup failed for ${lookup.address}. This usually means the feed is not supported.');
       }
     }
   }
@@ -53,7 +67,10 @@ class FeedService {
       final content = await WebDownloadHelper.getResponseBodyAsString(lookup.address);
       final drips = await source.parse(content);
 
+      print(drips.length);
+
       if(drips != null) {
+        _dripRepository.deleteAllDrips();
         _dripRepository.addDrips(drips);
       }
     } catch(e) {

@@ -26,7 +26,7 @@ class MediaDrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _settingsService.load(),
+      future: _settingsService.getSettings(),
       builder: (BuildContext context, AsyncSnapshot<Settings> snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
           if(snapshot.hasData) {

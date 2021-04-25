@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:mediadrip/exceptions/data_source_exception.dart';
 import 'package:mediadrip/exceptions/sqlite_not_found_exception.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/logging.dart';
 import 'package:mediadrip/services/database/data_source.dart';
 import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/utilities/file_helper.dart';
@@ -12,6 +13,7 @@ import 'package:sqlite3/open.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 class SqliteDatabase implements DataSource<Database> {
+  final Logger _log = getLogger('SqliteDatabase');
   final String _databaseFileName = 'core.db';
 
   Database _sqliteDatabase;
@@ -25,7 +27,7 @@ class SqliteDatabase implements DataSource<Database> {
     if(_sqliteDatabase != null)
       return;
 
-    print('init database');
+    _log.i('Initializing database...');
 
     await _checkIfLocalDatabaseExists();
 
@@ -36,8 +38,7 @@ class SqliteDatabase implements DataSource<Database> {
         break;
       }
     } on SqliteNotFoundException catch(e) {
-      // display an alert that sqlite library not found
-      print('exception thrown! ${e.toString()}');
+      _log.e(e.message);
     }
   }
 
@@ -46,7 +47,7 @@ class SqliteDatabase implements DataSource<Database> {
     if(_sqliteDatabase != null)
       return;
 
-    print('opened connection');
+    _log.i('Opened database connection...');
 
     _sqliteDatabase = sqlite3.open(_databasePath);
   }
@@ -56,15 +57,20 @@ class SqliteDatabase implements DataSource<Database> {
     if(_sqliteDatabase == null)
       return;
     
-    print('closed sqlite connection');
+    _log.i('Closing database connection...');
 
     _sqliteDatabase.dispose();
   }
 
   @override
   Database getDatabase() {
-    if(_sqliteDatabase == null)
-      throw DataSourceException('Cannot get database; returned null. Please initialize.');
+    if(_sqliteDatabase == null) {
+      final error = 'Cannot get database; returned null. Please initialize.';
+
+      _log.e(error);
+
+      throw DataSourceException(error);
+    }
     
     return _sqliteDatabase;
   }
@@ -93,13 +99,17 @@ class SqliteDatabase implements DataSource<Database> {
   }
 
   Future<void> _checkIfLocalDatabaseExists() async {
-    var databaseExists = await _pathService.fileExistsInDirectory(_databaseFileName, AvailableDirectories.root);
-    var documentsDirectory = await _pathService.mediaDripDirectory;
-    
-    this._databasePath = join(documentsDirectory, _databaseFileName);
+    try {
+      var databaseExists = await _pathService.fileExistsInDirectory(_databaseFileName, AvailableDirectories.root);
+      var documentsDirectory = await _pathService.mediaDripDirectory;
+      
+      this._databasePath = join(documentsDirectory, _databaseFileName);
 
-    if(!databaseExists) {
-      await _copyDatabaseAssetToDocuments();
+      if(!databaseExists) {
+        await _copyDatabaseAssetToDocuments();
+      }
+    } catch(e, s) {
+      _log.e(e.toString(), 'Database Asset Failure', s);
     }
   }
 

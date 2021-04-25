@@ -17,7 +17,7 @@ class SourceRepository implements ISourceRepository {
   /// Adds a source to the collection for later use in parsing web feeds.
   void addFeedSource(FeedSource source) {
     if(source.lookupAddresses == null) {
-      throw SourceRepositoryException(source, 'Feed source lookup address null.');
+      throw SourceRepositoryException('Feed source lookup address null.', source);
     }
 
     _feedSources.add(source);
@@ -42,7 +42,7 @@ class SourceRepository implements ISourceRepository {
   /// Adds a source to the collection for later use in downloading media.
   void addDownloadSource(DownloadSource source) {
     if(source.lookupAddresses == null) {
-      throw SourceRepositoryException(source, 'Download source lookup address null.');
+      throw SourceRepositoryException('Download source lookup address null.', source);
     }
 
     _downloadSources.add(source);

@@ -8,45 +8,45 @@ import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
 
 class _SettingsViewModel extends WidgetModel {
-  final SettingsService _settingsService = locator<SettingsService>();
+  // final SettingsService _settingsService = locator<SettingsService>();
 
-  bool get darkMode => _settingsService.data.isDarkMode;
-  bool get autoUpdate => _settingsService.data.updateYoutubeDLOnDownload;
-  String get feedMaxEntries => _settingsService.data.feedMaxEntries.toString();
-  String get applicationStorage => _settingsService.data.applicationStorage;
+  // bool get darkMode => _settingsService.data.isDarkMode;
+  // bool get autoUpdate => _settingsService.data.updateYoutubeDLOnDownload;
+  // String get feedMaxEntries => _settingsService.data.feedMaxEntries.toString();
+  // String get applicationStorage => _settingsService.data.applicationStorage;
 
-  TextEditingController applicationStorageTextController = TextEditingController();
-  TextEditingController feedMaxEntriesTextController = TextEditingController();
+  // TextEditingController applicationStorageTextController = TextEditingController();
+  // TextEditingController feedMaxEntriesTextController = TextEditingController();
 
   _SettingsViewModel({@required BuildContext context}) : super(context: context);
 
-  void toggleAutomaticUpdates() {
-    _settingsService.data.updateYoutubeDLOnDownload = !_settingsService.data.updateYoutubeDLOnDownload;
+  // void toggleAutomaticUpdates() {
+  //   _settingsService.data.updateYoutubeDLOnDownload = !_settingsService.data.updateYoutubeDLOnDownload;
 
-    save();
-  }
+  //   save();
+  // }
 
-  void toggleDarkMode() {
-    _settingsService.data.isDarkMode = !_settingsService.data.isDarkMode;
+  // void toggleDarkMode() {
+  //   _settingsService.data.isDarkMode = !_settingsService.data.isDarkMode;
 
-    save();
-  }
+  //   save();
+  // }
 
-  Future<void> save() async {
-    // parse max feed entries
-    _settingsService.data.feedMaxEntries = int.parse(feedMaxEntriesTextController.text);
+  // Future<void> save() async {
+  //   // parse max feed entries
+  //   _settingsService.data.feedMaxEntries = int.parse(feedMaxEntriesTextController.text);
 
-    notifyListeners();
+  //   notifyListeners();
 
-    _settingsService.update();
-  }
+  //   _settingsService.update();
+  // }
 
   @override
   void dispose() {
     super.dispose();
 
-    applicationStorageTextController.dispose();
-    feedMaxEntriesTextController.dispose();
+    // applicationStorageTextController.dispose();
+    // feedMaxEntriesTextController.dispose();
   }
 }
 
@@ -61,7 +61,8 @@ class SettingsView extends StatelessWidget {
           route: Routes.settings,
           child: Scaffold(
             floatingActionButton: FloatingActionButton(
-              onPressed: () => model.save(),
+              onPressed: () => print('press'),
+              // onPressed: () => model.save(),
               child: Icon(Icons.save),
             ),
             body: Padding(
@@ -74,7 +75,7 @@ class SettingsView extends StatelessWidget {
                       icon: Icons.folder,
                       children: [
                         TextField(
-                          controller: model.applicationStorageTextController..text = model.applicationStorage,
+                          // controller: model.applicationStorageTextController..text = model.applicationStorage,
                           decoration: InputDecoration(
                             labelText: 'Application Storage Directory',
                             prefixIcon: Icon(Icons.folder_open),
@@ -87,18 +88,18 @@ class SettingsView extends StatelessWidget {
                       title: 'Youtube Downloader',
                       icon: Icons.cloud_download,
                       children: [
-                        ListTile(
-                          leading: Icon(
-                            Icons.update
-                          ),
-                          title: Text('Automatic updates'),
-                          trailing: Switch(
-                            value: model.autoUpdate,
-                            onChanged: (_) => model.toggleAutomaticUpdates(),
-                            activeColor: Theme.of(context).primaryColor,
-                          ),
-                          onTap: () => model.toggleAutomaticUpdates()
-                        ),
+                        // ListTile(
+                        //   leading: Icon(
+                        //     Icons.update
+                        //   ),
+                        //   title: Text('Automatic updates'),
+                        //   trailing: Switch(
+                        //     value: model.autoUpdate,
+                        //     onChanged: (_) => model.toggleAutomaticUpdates(),
+                        //     activeColor: Theme.of(context).primaryColor,
+                        //   ),
+                        //   onTap: () => model.toggleAutomaticUpdates()
+                        // ),
                         ListTile(
                           title: Text('Manage configuration'),
                           leading: Icon(
@@ -116,7 +117,7 @@ class SettingsView extends StatelessWidget {
                       icon: Icons.rss_feed,
                       children: [
                         TextField(
-                          controller: model.feedMaxEntriesTextController..text = model.feedMaxEntries,
+                          // controller: model.feedMaxEntriesTextController..text = model.feedMaxEntries,
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly
@@ -143,18 +144,18 @@ class SettingsView extends StatelessWidget {
                       title: 'Theme Customization',
                       icon: Icons.smartphone,
                       children: [
-                        ListTile(
-                          leading: Icon(
-                            Icons.settings_brightness
-                          ),
-                          title: Text('Dark Mode'),
-                          trailing: Switch(
-                            value: model.darkMode,
-                            onChanged: (_) => model.toggleDarkMode(),
-                            activeColor: Theme.of(context).primaryColor,
-                          ),
-                          onTap: () => model.toggleDarkMode(),
-                        ),
+                        // ListTile(
+                        //   leading: Icon(
+                        //     Icons.settings_brightness
+                        //   ),
+                        //   title: Text('Dark Mode'),
+                        //   trailing: Switch(
+                        //     value: model.darkMode,
+                        //     onChanged: (_) => model.toggleDarkMode(),
+                        //     activeColor: Theme.of(context).primaryColor,
+                        //   ),
+                        //   onTap: () => model.toggleDarkMode(),
+                        // ),
                       ],
                     )
                   ],

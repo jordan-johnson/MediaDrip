@@ -16,7 +16,7 @@ abstract class BaseSource implements FeedSource, DownloadSource {
   @override
   bool doesAddressExistInLookup(String address) {
     for(var lookup in lookupAddresses) {
-      if(lookup.contains(address)) {
+      if(address.contains(lookup)) {
         return true;
       }
     }

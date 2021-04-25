@@ -16,6 +16,10 @@ class DripRepository implements IDripRepository {
     return _drips;
   }
 
+  void deleteAllDrips() {
+    _drips.clear();
+  }
+
   void orderDripsByDateDescending() {
     if(_drips == null || _drips.isEmpty)
       return;
