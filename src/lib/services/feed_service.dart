@@ -67,8 +67,6 @@ class FeedService {
       final content = await WebDownloadHelper.getResponseBodyAsString(lookup.address);
       final drips = await source.parse(content);
 
-      print(drips.length);
-
       if(drips != null) {
         _dripRepository.deleteAllDrips();
         _dripRepository.addDrips(drips);
