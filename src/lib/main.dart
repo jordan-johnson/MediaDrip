@@ -47,10 +47,10 @@ class MediaDrip extends StatelessWidget {
               ),
             );
           } else {
-            return Container(color: Colors.blue,);
+            return Container();
           }
         }
-        return Container(color: Colors.red);
+        return Container();
       },
     );
   }
