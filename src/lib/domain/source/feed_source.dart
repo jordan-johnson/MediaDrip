@@ -1,5 +1,5 @@
-import 'package:mediadrip/models/file/drip.dart';
-import 'package:mediadrip/models/source/source.dart';
+import 'package:mediadrip/domain/drip/drip.dart';
+import 'package:mediadrip/domain/source/source.dart';
 
 abstract class FeedSource extends Source {
   /// Label for views to use.

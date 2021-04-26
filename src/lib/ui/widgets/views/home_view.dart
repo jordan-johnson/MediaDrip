@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/feed/feed_results.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
 import 'package:mediadrip/services/feed_service.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/collections/feed.dart';
-import 'package:mediadrip/ui/widgets/drip_dialog.dart';
 import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
 
@@ -17,26 +15,12 @@ class _HomeViewModel extends WidgetModel {
     _feedService = locator<FeedService>(),
     super(context: context);
 
-  Future<FeedResults> getFeed() async {
-    await _feedService.load();
-
-    return _feedService.results;
+  Future<FeedResults> getFeedResults() async {
+    return await _feedService.getResults();
   }
 }
 
 class HomeView extends StatelessWidget {
-  Widget feedErrorDialog(BuildContext context, String message) {
-    print('test $message');
-    return DripDialog(
-      width: 400,
-      height: 200,
-      children: [
-        Text('Hello!'),
-        Text(message)
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return WidgetProvider<_HomeViewModel>(
@@ -46,7 +30,7 @@ class HomeView extends StatelessWidget {
           title: 'MediaDrip',
           route: Routes.home,
           child: Feed(
-            future: () => model.getFeed(),
+            future: () => model.getFeedResults(),
             itemBuilder: (ctx, item) {
               return ListTile(
                 leading: SizedBox(

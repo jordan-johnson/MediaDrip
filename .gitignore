@@ -6,6 +6,8 @@ build/
 ios/
 test/
 plugins/
+planning/
+web/
 
 # Miscellaneous
 *.class

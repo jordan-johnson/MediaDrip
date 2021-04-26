@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mediadrip/models/feed/feed_results.dart';
-import 'package:mediadrip/models/feed/ifeed_item.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
+import 'package:mediadrip/domain/feed/ifeed_item.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/drip_header.dart';
 
@@ -43,7 +43,7 @@ class Feed<T extends IFeedItem> extends StatelessWidget {
 
   /// Creates a date-based feed.
   /// 
-  /// Dates are organized according to [FeedResultsModel].
+  /// Dates are organized according to [FeedResults].
   Feed({
     @required this.future,
     @required this.itemBuilder,

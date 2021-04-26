@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:mediadrip/models/feed/json/reddit_json.dart';
-import 'package:mediadrip/models/file/download_instructions.dart';
-import 'package:mediadrip/models/file/drip.dart';
+import 'package:mediadrip/domain/drip/download_instructions.dart';
+import 'package:mediadrip/domain/drip/drip.dart';
+import 'package:mediadrip/domain/feed/json/reddit_json.dart';
 import 'package:mediadrip/services/sources/index.dart';
 import 'package:mediadrip/utilities/index.dart';
 
@@ -57,7 +57,7 @@ class RedditSource extends BaseSource {
   Future<List<Drip>> parse(String content) async {
     var json = jsonDecode(content);
     var redditModel = RedditJson.fromJson(json);
-    var drips = List<Drip>();
+    var drips = <Drip>[];
 
     if(redditModel != null) {
       for(var entry in redditModel.data) {

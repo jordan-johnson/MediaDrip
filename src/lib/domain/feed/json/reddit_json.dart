@@ -20,7 +20,7 @@ class RedditJsonThreadData {
 }
 
 class RedditJson {
-  List<RedditJsonThreadData> data = List<RedditJsonThreadData>();
+  List<RedditJsonThreadData> data = <RedditJsonThreadData>[];
 
   RedditJson.fromJson(Map<String, dynamic> json) {
     for(var entry in json['data']['children']) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:mediadrip/locator.dart';
 import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
@@ -10,35 +11,52 @@ import 'package:mediadrip/utilities/index.dart';
 class _SettingsViewModel extends WidgetModel {
   final SettingsService _settingsService = locator<SettingsService>();
 
-  bool get darkMode => _settingsService.data.isDarkMode;
-  bool get autoUpdate => _settingsService.data.updateYoutubeDLOnDownload;
-  String get feedMaxEntries => _settingsService.data.feedMaxEntries.toString();
-  String get applicationStorage => _settingsService.data.applicationStorage;
+  Settings _settingsData = Settings();
+
+  bool get darkMode => _settingsData.isDarkMode;
+  bool get autoUpdate => _settingsData.updateYoutubeDLOnDownload;
+  String get feedMaxEntries => _settingsData.feedMaxEntries.toString();
+  String get applicationStorage => _settingsData.applicationStorage;
 
   TextEditingController applicationStorageTextController = TextEditingController();
   TextEditingController feedMaxEntriesTextController = TextEditingController();
 
   _SettingsViewModel({@required BuildContext context}) : super(context: context);
 
-  void toggleAutomaticUpdates() {
-    _settingsService.data.updateYoutubeDLOnDownload = !_settingsService.data.updateYoutubeDLOnDownload;
+  @override
+  Future<void> initialize() async {
+    _settingsData = await _settingsService.getSettings();
 
-    save();
+    applicationStorageTextController.text = _settingsData.applicationStorage;
+    feedMaxEntriesTextController.text = _settingsData.feedMaxEntries.toString();
   }
 
-  void toggleDarkMode() {
-    _settingsService.data.isDarkMode = !_settingsService.data.isDarkMode;
+  Future<void> toggleAutomaticUpdates() async {
+    _settingsData.setYoutubeDownloadAutomaticUpdate(
+      !_settingsData.updateYoutubeDLOnDownload
+    );
 
-    save();
+    await save();
   }
 
-  Future<void> save() async {
-    // parse max feed entries
-    _settingsService.data.feedMaxEntries = int.parse(feedMaxEntriesTextController.text);
+  Future<void> toggleDarkMode() async {
+    _settingsData.setDarkMode(!_settingsData.isDarkMode);
 
-    notifyListeners();
+    await save(notify: true);
+  }
 
-    await _settingsService.save();
+  /// Save settings
+  /// 
+  /// [notify], if true, will call the [Settings] model's notifyListeners 
+  /// method to update the UI. This is useful for settings like dark mode.
+  Future<void> save({bool notify = false}) async {
+    _settingsData.setMaxEntries(feedMaxEntriesTextController.text);
+
+    await _settingsService.saveSettings(_settingsData);
+
+    if(notify) {
+      _settingsData.notifyListeners();
+    }
   }
 
   @override
@@ -74,7 +92,7 @@ class SettingsView extends StatelessWidget {
                       icon: Icons.folder,
                       children: [
                         TextField(
-                          controller: model.applicationStorageTextController..text = model.applicationStorage,
+                          controller: model.applicationStorageTextController,
                           decoration: InputDecoration(
                             labelText: 'Application Storage Directory',
                             prefixIcon: Icon(Icons.folder_open),
@@ -116,7 +134,7 @@ class SettingsView extends StatelessWidget {
                       icon: Icons.rss_feed,
                       children: [
                         TextField(
-                          controller: model.feedMaxEntriesTextController..text = model.feedMaxEntries,
+                          controller: model.feedMaxEntriesTextController,
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly

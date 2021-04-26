@@ -96,7 +96,7 @@ class DownloadView extends StatelessWidget {
                               color: Theme.of(context).primaryColor,
                               onPressed: () async => await model.update(),
                             ),
-                            RaisedButton(
+                            TextButton(
                               child: Text(model.downloadButtonLabel),
                               onPressed: model.isDownloadServiceRunning ? null : () => model.download(),
                             ),

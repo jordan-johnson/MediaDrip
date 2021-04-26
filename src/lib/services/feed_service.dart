@@ -1,282 +1,115 @@
 import 'dart:core';
+import 'package:mediadrip/domain/drip/drip_repository.dart';
+import 'package:mediadrip/domain/drip/idrip_repository.dart';
+import 'package:mediadrip/domain/feed/feed_lookup.dart';
+import 'package:mediadrip/domain/feed/feed_lookup_repository.dart';
+import 'package:mediadrip/domain/feed/feed_results.dart';
+import 'package:mediadrip/domain/feed/ifeed_lookup_repository.dart';
+import 'package:mediadrip/domain/source/feed_source.dart';
+import 'package:mediadrip/domain/source/isource_repository.dart';
+import 'package:mediadrip/domain/source/source_repository.dart';
+import 'package:mediadrip/exceptions/feed_load_exception.dart';
+import 'package:mediadrip/exceptions/source_lookup_exception.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/feed/feed_results.dart';
-import 'package:mediadrip/models/file/drip.dart';
-import 'package:mediadrip/models/source/feed_source.dart';
-import 'package:mediadrip/services/download_service.dart';
-import 'package:mediadrip/services/path_service.dart';
+import 'package:mediadrip/logging.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/utilities/date_time_helper.dart';
+import 'package:mediadrip/utilities/web_download_helper.dart';
 
 class FeedService {
-  /// Path service used in reading and writing to feed file,
-  /// [_feedListFileName], located in configuration directory, [_configDirectory].
-  final PathService _pathService = locator<PathService>();
-
-  /// Settings service used in various settings like max feed entries.
-  final SettingsService _settingsService = locator<SettingsService>();
-
-  /// Download service that will be used in retrieving the web feed file.
-  final DownloadService _downloadService = locator<DownloadService>();
-
-  /// File name for feed list saved in [_configDirectory].
-  final String _feedListFileName = 'feed.txt';
-
-  /// Configuration directory which is provided to [PathService] to save our 
-  /// feed file.
-  final AvailableDirectories _configDirectory = AvailableDirectories.configuration;
-
-  /// List of [FeedSource] for correctly parsing the web content 
-  /// via [FeedSource.parse].
-  List<FeedSource> _sources = List<FeedSource>();
-
-  /// Complete list of feeds that are mapped by name and web feed address.
-  Map<String, String> feeds = Map<String, String>();
-
-  List<String> errorMessages = List<String>();
-
-  /// All entries stripped from [feeds] that are sorted by publishing date.
-  /// 
-  /// These entries will then be further sorted into [today], [yesterday], 
-  /// [thisWeek], [thisMonth], and [older].
-  List<Drip> _entries = List<Drip>();
-
-  /// Results from [_sortEntriesByDate] after [load] has been called.
-  FeedResults results = FeedResults();
-
-  /// Feed service is used in downloading web feeds and sorting them into 
-  /// dates i.e. [today], [yesterday], [thisWeek], etc.
-  /// 
-  /// Refer to [load] for more information.
+  final Logger _log = getLogger('FeedService');
+  final SettingsService _settingsRepository = locator<SettingsService>();
+  final ISourceRepository _sourceRepository = locator<SourceRepository>();
+  final IFeedLookupRepository _lookupRepository = FeedLookupRepository();
+  final IDripRepository _dripRepository = DripRepository();
+  
+  /// Feed service is used in downloading web feeds and sorting them into dates i.e. `today`, `yesterday`, `thisWeek`, etc.
   FeedService();
 
-  /// Loads web feeds from feed file saved in configuration directory.
-  /// 
-  /// If the file does not exist, create an empty document for later use.
-  /// 
-  /// Otherwise, get the file, parse its content, store the name of the 
-  /// feed and address (separated by comma), order by date, remove excess 
-  /// entries, and sort the entries into [today], [yesterday], [thisWeek], 
-  /// [thisMonth], and [older].
-  /// 
-  /// An example of feeds within the feed file:
-  /// 
-  ///   ```text
-  ///   Some Youtube Feed,https://www.youtube.com/feeds/videos.xml?channel_id=<id>
-  ///   My News Feed,https://www.reddit.com/r/news.rss
-  ///   ```
-  /// 
-  /// This method can be used to refresh the feed.
-  Future<void> load() async {
-    var fileExists = await _pathService.fileExistsInDirectory(_feedListFileName, _configDirectory);
+  Future<FeedResults> getResults() async {
+    try {
+      final lookups = await _lookupRepository.getAllFeeds();
 
-    if(!fileExists) {
-      await _pathService.createFileInDirectory(_feedListFileName, '', _configDirectory);
+      if(lookups == null || lookups.isEmpty) {
+        _log.i('Returned 0 results.');
 
-      return;
+        return FeedResults();
+      }
+      
+      await _initializeSourceLookupMatching(lookups);
+
+      return await _processDrips();
+    } on SourceLookupException catch(e) {
+      _log.w(e.message);
+    } on FeedLoadException catch(e) {
+      _log.e(e.message);
+    } on Exception catch(e, stack) {
+      _log.e(e.toString(), 0, stack);
     }
-
-    var file = await _pathService.getFileFromFileName(_feedListFileName, _configDirectory);
-    var readLines = await file.readAsLines();
-
-    // if the file exists but no feeds are entered, we're done
-    if(readLines.length == 0)
-      return;
-
-    _mapFeeds(readLines);
-
-    await _downloadFeeds();
-
-    _orderEntriesByDateDescending();
-    _removeEntriesExceedingMaxSetting();
-    _sortEntriesByDate();
-  }
-
-  /// Adds a source to the collection for later use in 
-  /// parsing web feeds.
-  void addSource<T extends FeedSource>(T source) {
-    if(source.lookupAddresses == null) {
-      throw Exception('Source address cannot be empty!');
-    }
-
-    _sources.add(source);
-  }
-
-  /// Returns list of [FeedSource], found in [_sources].
-  List<FeedSource> getSources() {
-    return _sources;
-  }
-
-  /// Retrieves contents from feed file and returns a map of the name and address.
-  Future<Map<String, String>> getFeedsFromConfig() async {
-    Map<String, String> feeds = Map<String, String>();
-
-    var file = await _pathService.getFileFromFileName(_feedListFileName, _configDirectory);
-    var lines = await file.readAsLines();
     
-    for(var line in lines) {
-      var split = line.split(',');
-
-      if(split == null)
-        continue;
-
-      var name = split[0];
-      var address = split[1];
-
-      if(name != null && address != null) {
-        feeds[name] = address;
-      }
-    }
-
-    return feeds;
+    return FeedResults();
   }
 
-  /// Does a source lookup based on [address] and returns the 
-  /// interpreted address.
-  /// 
-  /// Refer to [FeedSourceModel] for more information.
-  Future<String> getInterpretedAddress(String address) async {
-    var sourceLookup = getSourceByAddressLookup(address);
-
-    if(sourceLookup != null) {
-      var interpreted = await sourceLookup.interpret(address);
-
-      if(interpreted != null) {
-        return interpreted;
-      }
-    }
-
-    return null;
-  }
-
-  /// Saves a map of feeds (name, address) to file, [_feedListFileName],
-  /// located in [_configDirectory].
-  /// 
-  /// File is always overwritten.
-  /// 
-  /// Once a cross-platform database solution is available, this will 
-  /// be rewritten.
-  Future<void> writeFeedsToConfig(Map<String, String> feeds) async {
-    String contents = '';
-
-    for(var feed in feeds.entries) {
-      var interpreted = await getInterpretedAddress(feed.value);
-
-      if(interpreted != null) {
-        // comma separated with a new line
-        contents += '${feed.key},$interpreted\n';
-      }
-    }
-
-    await _pathService.createFileInDirectory(_feedListFileName, contents, _configDirectory);
-  }
-
-  /// Get a feed source by checking if the [address] contains 
-  /// the base URL.
-  /// 
-  /// For example, a Youtube source will use youtube.com as the 
-  /// sourceAddress property. The [address] parameter in this 
-  /// is checked if it contains youtube.com
-  FeedSource getSourceByAddressLookup(String address) {
-    for(var source in _sources) {
-      for(var lookup in source.lookupAddresses) {
-        if(address.contains(lookup)) {
-          return source;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  /// Map the feeds by name of the feed and its address.
-  /// 
-  /// The feed data will be separated by comma.
-  void _mapFeeds(List<String> feedData) {
-    // clear the map in case the feed is being refreshed...
-    feeds.clear();
-
-    for(var feed in feedData) {
-      var split = feed.split(',');
-
-      // make sure we have a name and address
-      // if not, skip this line
-      if(split.length < 2)
-        continue;
-
-      var feedName = split[0];
-      var feedAddress = split[1];
-
-      this.feeds[feedName] = feedAddress;
-    }
-  }
-
-  /// Downloads the content of the web feeds and parses 
-  /// the content by getting the correct source match.
-  Future<void> _downloadFeeds() async {
-    // clear the entries in case the feed is being refreshed...
-    _entries.clear();
-    results.clearAll();
-
-    for(var feed in feeds.entries) {
-      var source = getSourceByAddressLookup(feed.value);
+  Future<void> _initializeSourceLookupMatching(List<FeedLookup> lookups) async {
+    for(var lookup in lookups) {
+      final source = _sourceRepository.getFeedSourceByAddressLookup(lookup.address);
 
       if(source != null) {
-        try {
-          var content = await _downloadService.getResponseBodyAsString(feed.value);
-          var drips = await source.parse(content);
-
-          if(drips != null) {
-            _entries.addAll(drips);
-          }
-        } catch(Exception) {
-          _error('Feed, ${feed.key}, could not be loaded. If problem persists, delete the feed from settings.');
-        }
+        await _downloadFeedLookup(source, lookup);
       } else {
-        _error('Source lookup failed for "${feed.value}". This usually means the feed you added is not supported. If problem persists, delete the feed from settings.');
+        throw SourceLookupException('Source lookup failed for ${lookup.address}. This usually means the feed is not supported.');
       }
     }
   }
 
-  /// Speaks for itself. This method orders the entries list 
-  /// from newest to oldest. This is done because the next 
-  /// method will remove excess entries.
-  /// 
-  /// Refer to [_removeEntriesExceedingMaxSetting] for more 
-  /// information.
-  void _orderEntriesByDateDescending() {
-    _entries.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-  }
+  Future<void> _downloadFeedLookup(FeedSource source, FeedLookup lookup) async {
+    try {
+      final content = await WebDownloadHelper.getResponseBodyAsString(lookup.address);
+      final drips = await source.parse(content);
 
-  /// Simply removes excess entries dictated by the amount 
-  /// provided by the setting.
-  void _removeEntriesExceedingMaxSetting() {
-    if(_entries.length > _settingsService.data.feedMaxEntries) {
-      _entries.removeRange(_settingsService.data.feedMaxEntries, _entries.length);
+      if(drips != null) {
+        _dripRepository.deleteAllDrips();
+        _dripRepository.addDrips(drips);
+      }
+    } catch(e) {
+      throw FeedLoadException('${lookup.label} could not be loaded. If problem persists, delete the feed from settings.', lookup);
     }
   }
 
-  /// Sorts entries into date-categories like today, yesterday, 
-  /// this week, and so on.
-  void _sortEntriesByDate() {
-    for(var entry in _entries) {
-      var published = DateTime(entry.dateTime.year, entry.dateTime.month, entry.dateTime.day);
+  Future<FeedResults> _processDrips() async {
+    if(_dripRepository.count() == 0)
+      return FeedResults();
 
+    final maxEntries = await _settingsRepository.getSettings().then((x) => x.feedMaxEntries);
+
+    _dripRepository.orderDripsByDateDescending();
+    _dripRepository.removeDripsExceedingMaxCount(maxEntries);
+
+    return await _buildResults();
+  }
+
+  Future<FeedResults> _buildResults() async {
+    FeedResults results = FeedResults();
+
+    if(_dripRepository.count() == 0)
+      return results;
+
+    for(var drip in _dripRepository.getAllDrips()) {
+      var published = DateTime(drip.dateTime.year, drip.dateTime.month, drip.dateTime.day);
+      
       if(DateTimeHelper.isToday(published)) {
-        results.today.add(entry);
+        results.today.add(drip);
       } else if(DateTimeHelper.isYesterday(published)) {
-        results.yesterday.add(entry);
+        results.yesterday.add(drip);
       } else if(DateTimeHelper.isWithinDaysFromNow(published, 2, 7)) {
-        results.thisWeek.add(entry);
+        results.thisWeek.add(drip);
       } else if(DateTimeHelper.isWithinDaysFromNow(published, 2, 30)) {
-        results.thisMonth.add(entry);
+        results.thisMonth.add(drip);
       } else {
-        results.older.add(entry);
+        results.older.add(drip);
       }
     }
-  }
 
-  void _error(String message) {
-    errorMessages.add(message);
+    return results;
   }
 }

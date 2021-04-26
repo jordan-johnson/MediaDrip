@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/models/file/settings.dart';
 import 'package:mediadrip/services/settings_service.dart';
 import 'package:mediadrip/sources.dart';
 import 'package:mediadrip/ui/theme/theme.dart';
 import 'package:mediadrip/utilities/routes.dart';
+import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:provider/provider.dart';
 
 class MediaDrip extends StatelessWidget {
@@ -26,7 +26,7 @@ class MediaDrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _settingsService.load(),
+      future: _settingsService.getSettings(),
       builder: (BuildContext context, AsyncSnapshot<Settings> snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
           if(snapshot.hasData) {
@@ -58,7 +58,6 @@ class MediaDrip extends StatelessWidget {
 
 void main() {
   setupLocator();
-
   loadSources();
 
   runApp(MediaDrip());

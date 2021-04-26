@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mediadrip/models/feed/ifeed_item.dart';
+import 'package:mediadrip/domain/feed/ifeed_item.dart';
 
 enum DripType {
   unset,
