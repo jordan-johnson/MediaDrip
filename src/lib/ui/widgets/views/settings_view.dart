@@ -49,7 +49,7 @@ class _SettingsViewModel extends WidgetModel {
   /// 
   /// [notify], if true, will call the [Settings] model's notifyListeners 
   /// method to update the UI. This is useful for settings like dark mode.
-  Future<void> save({bool notify}) async {
+  Future<void> save({bool notify = false}) async {
     _settingsData.setMaxEntries(feedMaxEntriesTextController.text);
 
     await _settingsService.saveSettings(_settingsData);
