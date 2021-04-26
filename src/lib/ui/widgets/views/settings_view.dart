@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:mediadrip/locator.dart';
+import 'package:mediadrip/logging.dart';
 import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/collections/index.dart';
@@ -8,45 +10,63 @@ import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
 
 class _SettingsViewModel extends WidgetModel {
-  // final SettingsService _settingsService = locator<SettingsService>();
+  final Logger _log = getLogger('SettingsViewModel');
+  final SettingsService _settingsService = locator<SettingsService>();
 
-  // bool get darkMode => _settingsService.data.isDarkMode;
-  // bool get autoUpdate => _settingsService.data.updateYoutubeDLOnDownload;
-  // String get feedMaxEntries => _settingsService.data.feedMaxEntries.toString();
-  // String get applicationStorage => _settingsService.data.applicationStorage;
+  Settings _settingsData = Settings();
 
-  // TextEditingController applicationStorageTextController = TextEditingController();
-  // TextEditingController feedMaxEntriesTextController = TextEditingController();
+  bool get darkMode => _settingsData.isDarkMode;
+  bool get autoUpdate => _settingsData.updateYoutubeDLOnDownload;
+  String get feedMaxEntries => _settingsData.feedMaxEntries.toString();
+  String get applicationStorage => _settingsData.applicationStorage;
+
+  TextEditingController applicationStorageTextController = TextEditingController();
+  TextEditingController feedMaxEntriesTextController = TextEditingController();
 
   _SettingsViewModel({@required BuildContext context}) : super(context: context);
 
-  // void toggleAutomaticUpdates() {
-  //   _settingsService.data.updateYoutubeDLOnDownload = !_settingsService.data.updateYoutubeDLOnDownload;
+  @override
+  Future<void> initialize() async {
+    _settingsData = await _settingsService.getSettings();
 
-  //   save();
-  // }
+    applicationStorageTextController.text = _settingsData.applicationStorage;
+    feedMaxEntriesTextController.text = _settingsData.feedMaxEntries.toString();
+  }
 
-  // void toggleDarkMode() {
-  //   _settingsService.data.isDarkMode = !_settingsService.data.isDarkMode;
+  Future<void> toggleAutomaticUpdates() async {
+    _settingsData.setYoutubeDownloadAutomaticUpdate(
+      !_settingsData.updateYoutubeDLOnDownload
+    );
 
-  //   save();
-  // }
+    await save();
+  }
 
-  // Future<void> save() async {
-  //   // parse max feed entries
-  //   _settingsService.data.feedMaxEntries = int.parse(feedMaxEntriesTextController.text);
+  Future<void> toggleDarkMode() async {
+    _settingsData.setDarkMode(!_settingsData.isDarkMode);
 
-  //   notifyListeners();
+    await save(notify: true);
+  }
 
-  //   _settingsService.update();
-  // }
+  /// Save settings
+  /// 
+  /// [notify], if true, will call the [Settings] model's notifyListeners 
+  /// method to update the UI. This is useful for settings like dark mode.
+  Future<void> save({bool notify}) async {
+    _settingsData.setMaxEntries(feedMaxEntriesTextController.text);
+
+    await _settingsService.saveSettings(_settingsData);
+
+    if(notify) {
+      _settingsData.notifyListeners();
+    }
+  }
 
   @override
   void dispose() {
     super.dispose();
 
-    // applicationStorageTextController.dispose();
-    // feedMaxEntriesTextController.dispose();
+    applicationStorageTextController.dispose();
+    feedMaxEntriesTextController.dispose();
   }
 }
 
@@ -61,8 +81,7 @@ class SettingsView extends StatelessWidget {
           route: Routes.settings,
           child: Scaffold(
             floatingActionButton: FloatingActionButton(
-              onPressed: () => print('press'),
-              // onPressed: () => model.save(),
+              onPressed: () => model.save(),
               child: Icon(Icons.save),
             ),
             body: Padding(
@@ -75,7 +94,7 @@ class SettingsView extends StatelessWidget {
                       icon: Icons.folder,
                       children: [
                         TextField(
-                          // controller: model.applicationStorageTextController..text = model.applicationStorage,
+                          controller: model.applicationStorageTextController,
                           decoration: InputDecoration(
                             labelText: 'Application Storage Directory',
                             prefixIcon: Icon(Icons.folder_open),
@@ -88,18 +107,18 @@ class SettingsView extends StatelessWidget {
                       title: 'Youtube Downloader',
                       icon: Icons.cloud_download,
                       children: [
-                        // ListTile(
-                        //   leading: Icon(
-                        //     Icons.update
-                        //   ),
-                        //   title: Text('Automatic updates'),
-                        //   trailing: Switch(
-                        //     value: model.autoUpdate,
-                        //     onChanged: (_) => model.toggleAutomaticUpdates(),
-                        //     activeColor: Theme.of(context).primaryColor,
-                        //   ),
-                        //   onTap: () => model.toggleAutomaticUpdates()
-                        // ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.update
+                          ),
+                          title: Text('Automatic updates'),
+                          trailing: Switch(
+                            value: model.autoUpdate,
+                            onChanged: (_) => model.toggleAutomaticUpdates(),
+                            activeColor: Theme.of(context).primaryColor,
+                          ),
+                          onTap: () => model.toggleAutomaticUpdates()
+                        ),
                         ListTile(
                           title: Text('Manage configuration'),
                           leading: Icon(
@@ -117,7 +136,7 @@ class SettingsView extends StatelessWidget {
                       icon: Icons.rss_feed,
                       children: [
                         TextField(
-                          // controller: model.feedMaxEntriesTextController..text = model.feedMaxEntries,
+                          controller: model.feedMaxEntriesTextController,
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly
@@ -144,18 +163,18 @@ class SettingsView extends StatelessWidget {
                       title: 'Theme Customization',
                       icon: Icons.smartphone,
                       children: [
-                        // ListTile(
-                        //   leading: Icon(
-                        //     Icons.settings_brightness
-                        //   ),
-                        //   title: Text('Dark Mode'),
-                        //   trailing: Switch(
-                        //     value: model.darkMode,
-                        //     onChanged: (_) => model.toggleDarkMode(),
-                        //     activeColor: Theme.of(context).primaryColor,
-                        //   ),
-                        //   onTap: () => model.toggleDarkMode(),
-                        // ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.settings_brightness
+                          ),
+                          title: Text('Dark Mode'),
+                          trailing: Switch(
+                            value: model.darkMode,
+                            onChanged: (_) => model.toggleDarkMode(),
+                            activeColor: Theme.of(context).primaryColor,
+                          ),
+                          onTap: () => model.toggleDarkMode(),
+                        ),
                       ],
                     )
                   ],

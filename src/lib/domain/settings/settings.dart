@@ -18,43 +18,47 @@ class Settings extends ChangeNotifier {
   String _youtubeConfiguration = '';
   String get youtubeConfiguration => _youtubeConfiguration;
 
-  set updateYoutubeDLOnDownload(bool value) {
-    _updateYoutubeDLOnDownload = value;
-
-    notifyListeners();
-  }
-
-  set isDarkMode(bool value) {
-    _isDarkMode = value;
-    
-    notifyListeners();
-  }
-
-  set feedMaxEntries(int value) {
-    _feedMaxEntries = value;
-
-    notifyListeners();
-  }
-
-  set applicationStorage(String value) {
-    _applicationStorage = value;
-
-    notifyListeners();
-  }
-
-  set youtubeConfiguration(String value) {
-    _youtubeConfiguration = value;
-
-    notifyListeners();
-  }
-
+  /// Application settings.
   Settings();
 
-  Settings.fromMap(Map<String, dynamic> map) {
-    isDarkMode = map['dark_mode'] == 0 ? false : true;
-    updateYoutubeDLOnDownload = map['update_tooling'] == 0 ? false : true;
-    feedMaxEntries = map['max_feed_entries'];
-    applicationStorage = map['storage_path'];
-    youtubeConfiguration = map['ytdl_config_path'];
+  /// Application settings.
+  /// 
+  /// Parses and maps columns from database table to our object.
+  Settings.fromTable(Map<String, dynamic> map) {
+    bool parseDarkMode = map['dark_mode'] == 0 ? false : true;
+    setDarkMode(parseDarkMode);
+
+    bool parseToolingAutoUpdate = map['update_tooling'] == 0 ? false : true;
+    setYoutubeDownloadAutomaticUpdate(parseToolingAutoUpdate);
+
+    setMaxEntries(map['max_feed_entries']);
+    setApplicationStoragePath(map['storage_path']);
+    setYoutubeDownloadConfigurationPath(map['ytdl_config_path']);
+  }
+
+  void setYoutubeDownloadAutomaticUpdate(bool value) {
+    _updateYoutubeDLOnDownload = value;
+  }
+
+  void setDarkMode(bool value) {
+    _isDarkMode = value;
+  }
+
+  void setMaxEntries(dynamic value) {
+    if(value is int) {
+      _feedMaxEntries = value;
+    } else if(value is String) {
+      _feedMaxEntries = int.parse(value);
+    } else {
+      throw FormatException('Could not set max entries! Not an acceptable type', value);
+    }
+  }
+
+  void setApplicationStoragePath(String value) {
+    _applicationStorage = value;
+  }
+
+  void setYoutubeDownloadConfigurationPath(String value) {
+    _youtubeConfiguration = value;
   }
 }
