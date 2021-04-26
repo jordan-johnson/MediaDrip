@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mediadrip/domain/settings/settings.dart';
 import 'package:mediadrip/locator.dart';
-import 'package:mediadrip/logging.dart';
 import 'package:mediadrip/services/index.dart';
 import 'package:mediadrip/ui/providers/widget_provider.dart';
 import 'package:mediadrip/ui/widgets/collections/index.dart';
@@ -10,7 +9,6 @@ import 'package:mediadrip/ui/widgets/drip_wrapper.dart';
 import 'package:mediadrip/utilities/index.dart';
 
 class _SettingsViewModel extends WidgetModel {
-  final Logger _log = getLogger('SettingsViewModel');
   final SettingsService _settingsService = locator<SettingsService>();
 
   Settings _settingsData = Settings();

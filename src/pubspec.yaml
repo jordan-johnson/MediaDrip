@@ -56,7 +56,6 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/core.db
-    - lib/assets/settings.json
     - lib/assets/youtube-dl.conf
   
   fonts:

@@ -13,13 +13,11 @@ import 'package:sqlite3/open.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 class SqliteDatabase implements DataSource<Database> {
+  final PathService _pathService = locator<PathService>();
   final Logger _log = getLogger('SqliteDatabase');
   final String _databaseFileName = 'core.db';
 
   Database _sqliteDatabase;
-
-  PathService _pathService = locator<PathService>();
-
   String _databasePath;
 
   @override
